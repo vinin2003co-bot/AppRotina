@@ -643,15 +643,16 @@
         }
 
         function filterCategory(cat) {
-            state.activeCategoryFilter = cat;
-            document.querySelectorAll('.category-filter-btn').forEach(btn => {
-                if (btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('All'))) {
-                    btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all whitespace-nowrap";
-                } else {
-                    btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap";
-                }
-            });
-            renderRoutines();
+    state.activeCategoryFilter = cat;
+    document.querySelectorAll('.category-filter-btn').forEach(btn => {
+        const btnCat = btn.getAttribute('data-category');
+        if (btnCat === cat) {
+            btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all whitespace-nowrap";
+        } else {
+            btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap";
+        }
+    });
+    renderRoutines();
         }
 
         function saveHabit(e) {
@@ -664,7 +665,7 @@
     const color = document.getElementById('habit-color').value;
 
     if (id) {
-        // Edit existing routine
+        // Edit existing
         const index = state.habits.findIndex(h => h.id === id);
         if (index !== -1) {
             state.habits[index] = { 
@@ -677,7 +678,7 @@
             };
         }
     } else {
-        // Create new routine with unique timestamp ID
+        // Create new
         const newHabit = {
             id: 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
             title,
@@ -694,7 +695,9 @@
 
     saveStorage();
     closeModal('habit-modal');
-    renderRoutines();
+    
+    // Reset category filter to 'All' so the newly created routine is guaranteed to show
+    filterCategory('All');
         }
 
         function editHabit(id) {
