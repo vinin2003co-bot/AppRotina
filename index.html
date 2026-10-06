@@ -655,39 +655,46 @@
         }
 
         function saveHabit(e) {
-            e.preventDefault();
-            const id = document.getElementById('habit-id').value;
-            const title = document.getElementById('habit-title').value;
-            const category = document.getElementById('habit-category').value;
-            const tod = document.getElementById('habit-tod').value;
-            const frequency = document.getElementById('habit-frequency').value;
-            const color = document.getElementById('habit-color').value;
+    e.preventDefault();
+    const id = document.getElementById('habit-id').value;
+    const title = document.getElementById('habit-title').value.trim();
+    const category = document.getElementById('habit-category').value;
+    const tod = document.getElementById('habit-tod').value;
+    const frequency = document.getElementById('habit-frequency').value;
+    const color = document.getElementById('habit-color').value;
 
-            if (id) {
-                // Edit existing
-                const index = state.habits.findIndex(h => h.id === id);
-                if (index !== -1) {
-                    state.habits[index] = { ...state.habits[index], title, category, tod, frequency, color };
-                }
-            } else {
-                // Create new
-                const newHabit = {
-                    id: 'h_' + Date.now(),
-                    title,
-                    category,
-                    tod,
-                    frequency,
-                    color,
-                    currentStreak: 0,
-                    bestStreak: 0,
-                    history: {}
-                };
-                state.habits.push(newHabit);
-            }
+    if (id) {
+        // Edit existing routine
+        const index = state.habits.findIndex(h => h.id === id);
+        if (index !== -1) {
+            state.habits[index] = { 
+                ...state.habits[index], 
+                title, 
+                category, 
+                tod, 
+                frequency, 
+                color 
+            };
+        }
+    } else {
+        // Create new routine with unique timestamp ID
+        const newHabit = {
+            id: 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
+            title,
+            category,
+            tod,
+            frequency,
+            color,
+            currentStreak: 0,
+            bestStreak: 0,
+            history: {}
+        };
+        state.habits.push(newHabit);
+    }
 
-            saveStorage();
-            closeModal('habit-modal');
-            renderRoutines();
+    saveStorage();
+    closeModal('habit-modal');
+    renderRoutines();
         }
 
         function editHabit(id) {
