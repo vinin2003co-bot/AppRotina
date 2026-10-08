@@ -3,24 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App de Rotina</title>
+    <title>App de Rotina & Despensa</title>
 
-    <!-- Standard Favicon -->
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Routine App">
 
-<!-- Android / Chrome Home Screen Icon -->
-<link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
-
-<!-- iOS Safari Home Screen Icon -->
-<link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
-
-<!-- Link to Web App Manifest for Android PWA Support -->
-<link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Routine App">
-
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -44,62 +35,38 @@
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti for Completion Celebrations -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
         }
-        /* Custom scrollbar for sleeker UI */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.3);
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.5);
-        }
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .glass-light {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        /* Habit completion pulse effect */
+        input[type=number] { -moz-appearance: textfield; }
+        
         @keyframes pop {
             0% { transform: scale(1); }
             50% { transform: scale(1.08); }
             100% { transform: scale(1); }
         }
-        .animate-pop {
-            animation: pop 0.25s ease-in-out;
-        }
+        .animate-pop { animation: pop 0.25s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-darkbg text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-200">
 
     <div class="flex flex-col md:flex-row min-h-screen">
-
         <!-- Sidebar Navigation -->
         <aside class="w-full md:w-64 bg-white dark:bg-darkcard border-b md:border-b-0 md:border-r border-gray-200 dark:border-darkborder p-4 flex flex-col justify-between shrink-0">
             <div>
-                <!-- App Header Logo -->
                 <div class="flex items-center justify-between mb-8 px-2">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
@@ -110,14 +77,12 @@
                             <span class="text-xs text-brand-500 font-medium">Hábitos e Dia a dia</span>
                         </div>
                     </div>
-                    <!-- Mobile Theme Toggle -->
                     <button onclick="toggleTheme()" class="md:hidden text-gray-500 dark:text-gray-400 hover:text-brand-500 p-2 rounded-lg">
                         <i class="fa-solid fa-moon dark:hidden text-lg"></i>
                         <i class="fa-solid fa-sun hidden dark:block text-lg"></i>
                     </button>
                 </div>
 
-                <!-- Navigation Tabs -->
                 <nav class="space-y-1" id="navigation-tabs">
                     <button onclick="switchTab('tab-routines')" id="nav-tab-routines" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
                         <i class="fa-solid fa-list-check w-5 text-center"></i>
@@ -131,6 +96,10 @@
                         <i class="fa-solid fa-clock w-5 text-center"></i>
                         <span>Agenda de Tarefas</span>
                     </button>
+                    <button onclick="switchTab('tab-fridge')" id="nav-tab-fridge" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-snowflake w-5 text-center"></i>
+                        <span>Despensa & Receitas</span>
+                    </button>
                     <button onclick="switchTab('tab-stats')" id="nav-tab-stats" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
                         <i class="fa-solid fa-chart-column w-5 text-center"></i>
                         <span>Estatísticas e ofensivas</span>
@@ -142,7 +111,6 @@
                 </nav>
             </div>
 
-            <!-- Footer Quick Controls & Theme Toggle -->
             <div class="mt-8 pt-4 border-t border-gray-200 dark:border-darkborder hidden md:flex items-center justify-between px-2">
                 <span class="text-xs text-gray-400">Tema</span>
                 <button onclick="toggleTheme()" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
@@ -154,10 +122,9 @@
         </aside>
 
         <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto pb-24">
-
-            <!-- TAB 1: DAILY ROUTINES & HABITS -->
+            
+            <!-- TAB 1: DAILY ROUTINES -->
             <section id="tab-routines" class="tab-content space-y-6">
-                <!-- Header with Date and Progress Bar -->
                 <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
@@ -165,12 +132,9 @@
                             <h2 class="text-2xl font-bold tracking-tight">Dashboard Diário</h2>
                         </div>
                         <button onclick="openModal('habit-modal')" class="inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium shadow-md shadow-brand-500/20 transition-all text-sm">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Adicionar Nova Rotina</span>
+                            <i class="fa-solid fa-plus"></i> <span>Adicionar Nova Rotina</span>
                         </button>
                     </div>
-
-                    <!-- Today's Progress Overview -->
                     <div class="space-y-2">
                         <div class="flex justify-between text-sm font-medium">
                             <span class="text-gray-500 dark:text-gray-400">Progresso de Hoje</span>
@@ -181,181 +145,114 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Category Filters -->
-                <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none" id="category-filter-bar">
-                    <button onclick="filterCategory('All')" data-category="All" class="category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all whitespace-nowrap">Todas Rotinas</button>
-                    <button onclick="filterCategory('Health')" data-category="Health" class="category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap">Saúde</button>
-                    <button onclick="filterCategory('Productivity')" data-category="Productivity" class="category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap">Produtividade</button>
-                    <button onclick="filterCategory('Fitness')" data-category="Fitness" class="category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap">Fitness</button>
-                    <button onclick="filterCategory('Mindset')" data-category="Mindset" class="category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap">Mente</button>
-                </div>
-
-                <!-- Time of Day Groups: Morning, Afternoon, Evening -->
-                <div class="space-y-6" id="routines-container">
-                    <!-- Dynamic rendering via JS -->
-                </div>
+                <div class="space-y-6" id="routines-container"></div>
             </section>
 
-            <!-- TAB 2: WEEKLY TASKS BY DAY -->
-            <section id="tab-weekly" class="tab-content hidden space-y-6">
+            <!-- TABS 2 & 3 & 5 & 6 (Hidden shells) -->
+            <section id="tab-weekly" class="tab-content hidden space-y-6"><div id="weekly-days-container"></div></section>
+            <section id="tab-planner" class="tab-content hidden space-y-6"><div id="timeline-container"></div></section>
+            <section id="tab-stats" class="tab-content hidden space-y-6"><div id="weekly-matrix-body"></div></section>
+            <section id="tab-settings" class="tab-content hidden space-y-6"></section>
+
+            <!-- TAB 4: FRIDGE & RECIPES -->
+            <section id="tab-fridge" class="tab-content hidden space-y-6">
                 <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold tracking-tight">Tarefas da Semana</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Organize suas tarefas específicas para cada dia da semana.</p>
+                        <h2 class="text-2xl font-bold tracking-tight">Despensa e Receitas</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Gerencie os ingredientes, validades e quantidades.</p>
                     </div>
-                    <button onclick="openModal('weekly-modal')" class="inline-flex items-center justify-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition-all shadow-md">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Nova Tarefa</span>
-                    </button>
                 </div>
 
-                <!-- Days Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="weekly-days-container">
-                    <!-- Rendered dynamically via JS -->
-                </div>
-            </section>
-
-            <!-- TAB 3: TIME-BLOCK PLANNER -->
-            <section id="tab-planner" class="tab-content hidden space-y-6">
-                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div>
-                            <h2 class="text-2xl font-bold tracking-tight">Agenda de Tarefas</h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mapeie os seus hábitos e os gerencie de hora em hora.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column: Inventory -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Add Item Form -->
+                        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-5 shadow-sm">
+                            <h3 class="font-bold text-sm mb-3">Adicionar Ingrediente</h3>
+                            <form onsubmit="addFridgeItem(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                                <div class="sm:col-span-4">
+                                    <input type="text" id="fridge-item-name" required placeholder="Nome (Ex: Leite)" class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input type="number" id="fridge-item-qty" required min="1" placeholder="Qtd" class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <select id="fridge-item-unit" class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                        <option value="un">Un.</option>
+                                        <option value="g">Grama (g)</option>
+                                        <option value="ml">Mililitro (ml)</option>
+                                    </select>
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <input type="date" id="fridge-item-expiry" required class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <button type="submit" class="w-full h-full px-3 py-2 bg-brand-500 text-white rounded-xl text-sm font-semibold hover:bg-brand-600 transition-colors flex items-center justify-center shadow-sm">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <button onclick="openTimeBlockModal()" class="inline-flex items-center justify-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition-all shadow-md">
-                            <i class="fa-solid fa-calendar-plus"></i>
-                            <span>Adicionar Tarefa</span>
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Schedule Timeline Container -->
-                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm overflow-hidden">
-                    <div class="relative pl-16 space-y-6" id="timeline-container">
-                        <!-- Timeline hourly rows dynamically populated -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: STATISTICS & STREAKS -->
-            <section id="tab-stats" class="tab-content hidden space-y-6">
-                <!-- Stat Cards Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-5 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Rotinas Ativas</span>
-                            <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500 flex items-center justify-center"><i class="fa-solid fa-list"></i></div>
-                        </div>
-                        <p id="stat-total-routines" class="text-3xl font-bold mt-2">0</p>
-                    </div>
-
-                    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-5 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ofensiva mais Longa</span>
-                            <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-fire"></i></div>
-                        </div>
-                        <p id="stat-best-streak" class="text-3xl font-bold mt-2">0 <span class="text-sm font-normal text-gray-400">dias</span></p>
-                    </div>
-
-                    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-5 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Completados Hoje</span>
-                            <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-500 flex items-center justify-center"><i class="fa-solid fa-check-circle"></i></div>
-                        </div>
-                        <p id="stat-today-completed" class="text-3xl font-bold mt-2">0</p>
-                    </div>
-
-                    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-5 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Semanal</span>
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-500 flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></div>
-                        </div>
-                        <p id="stat-weekly-rate" class="text-3xl font-bold mt-2">0%</p>
-                    </div>
-                </div>
-
-                <!-- Weekly Tracker Table -->
-                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm">
-                    <h3 class="text-lg font-bold mb-4">Completado Semana (Seg - Dom)</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-gray-200 dark:border-darkborder text-xs text-gray-400 uppercase">
-                                    <th class="py-3 px-4 font-semibold">Hábito</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Seg</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Ter</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Qua</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Qui</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Sex</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Sáb</th>
-                                    <th class="py-3 px-2 text-center font-semibold">Dom</th>
-                                    <th class="py-3 px-4 text-right font-semibold">Ofensiva</th>
-                                </tr>
-                            </thead>
-                            <tbody id="weekly-matrix-body" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
-                                <!-- Dynamically generated -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-<!-- TAB 5: BACKUP & SERVER DATA -->
-            <section id="tab-settings" class="tab-content hidden space-y-6">
-                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm">
-                    <h2 class="text-2xl font-bold tracking-tight mb-1">Gerenciamento de Dados</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Todos dados do aplicativo são armazenados localmente no navegador. Exporte o backup em JSON ou importe dados quando desejar.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Backup Export & Import Card -->
-                    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-500 flex items-center justify-center">
-                                <i class="fa-solid fa-file-export text-lg"></i>
+                        <!-- Inventory Display View -->
+                        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl shadow-sm overflow-hidden min-h-[400px] flex flex-col">
+                            
+                            <!-- Toggle Header -->
+                            <div class="p-4 border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <h3 class="font-bold text-sm">Estoque</h3>
+                                    <span class="text-xs text-gray-500" id="inventory-count">0 itens</span>
+                                </div>
+                                
+                                <div class="flex space-x-1 bg-gray-200 dark:bg-gray-900 p-1 rounded-lg">
+                                    <button id="btn-view-list" onclick="setFridgeView('list')" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-white dark:bg-darkcard shadow-sm text-brand-500 transition-all">
+                                        <i class="fa-solid fa-list mr-1"></i> Lista
+                                    </button>
+                                    <button id="btn-view-shelf" onclick="setFridgeView('shelf')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 transition-all">
+                                        <i class="fa-solid fa-layer-group mr-1"></i> Prateleiras
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="font-bold">JSON Backup</h3>
-                                <p class="text-xs text-gray-400">Salve ou migre seu histórico de hábito</p>
+
+                            <!-- List View -->
+                            <div id="fridge-list-container" class="overflow-x-auto flex-1">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-gray-200 dark:border-darkborder text-xs text-gray-400 uppercase tracking-wider">
+                                            <th class="py-3 px-4 font-semibold">Ingrediente</th>
+                                            <th class="py-3 px-4 font-semibold">Quantidade</th>
+                                            <th class="py-3 px-4 font-semibold">Validade</th>
+                                            <th class="py-3 px-4 font-semibold">Status</th>
+                                            <th class="py-3 px-4 text-right font-semibold">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventory-table-body" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
+                                        <!-- Dynamically generated list rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Shelf View -->
+                            <div id="fridge-shelf-container" class="hidden flex-1 bg-gradient-to-b from-blue-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 flex-col space-y-6 relative overflow-hidden p-4 border-t-4 border-gray-300 dark:border-gray-700 shadow-inner">
+                                <!-- Dynamically generated shelves -->
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                            Exporte sua base de dados de hábitos, recordes de ofensiva e agenda de tarefas como um arquivo JSON.
-                        </p>
-                        <div class="flex flex-wrap gap-3 pt-2">
-                            <button onclick="exportData()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold flex items-center space-x-2 shadow-sm transition-all">
-                                <i class="fa-solid fa-download"></i>
-                                <span>Exportar JSON</span>
-                            </button>
-                            <label class="px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-semibold flex items-center space-x-2 cursor-pointer transition-all">
-                                <i class="fa-solid fa-upload"></i>
-                                <span>Importar JSON</span>
-                                <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="importData(event)">
-                            </label>
-                        </div>
                     </div>
 
-                    <!-- Reset & Danger Zone -->
-                    <div class="bg-white dark:bg-darkcard border border-red-200 dark:border-red-900/40 rounded-2xl p-6 shadow-sm space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-500 flex items-center justify-center">
-                                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                    <!-- Right Column: Recipes -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm min-h-[550px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-lg">Receitas</h3>
+                                <button onclick="openModal('recipe-modal')" class="text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-3 py-1.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700">
+                                    <i class="fa-solid fa-plus"></i> Criar
+                                </button>
                             </div>
-                            <div>
-                                <h3 class="font-bold text-red-600 dark:text-red-400">Cuidado</h3>
-                                <p class="text-xs text-gray-400">Limpe o banco de dados e resete o aplicativo</p>
+                            
+                            <div class="flex flex-col gap-4" id="recipes-container">
+                                <!-- Recipe cards injected here -->
                             </div>
-                        </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                            Limpa todas rotinas, ofensivas e agenda de tarefas armazenados no navegador. Essa ação não pode ser desfeita a não ser que você tenha um backup.
-                        </p>
-                        <div class="pt-2">
-                            <button onclick="confirmResetData()" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold flex items-center space-x-2 shadow-sm transition-all">
-                                <i class="fa-solid fa-trash"></i>
-                                <span>Resetar Todos Dados</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -363,665 +260,454 @@
         </main>
     </div>
 
-    <!-- MODAL: ADD / EDIT HABIT -->
-    <div id="habit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- MODAL: ADD CUSTOM RECIPE -->
+    <div id="recipe-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-pop">
-            <button onclick="closeModal('habit-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+            <button onclick="closeModal('recipe-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 id="habit-modal-title" class="text-xl font-bold mb-4">Adicionar Nova Rotina</h3>
+            <h3 class="text-xl font-bold mb-4">Criar Nova Receita</h3>
             
-            <form id="habit-form" onsubmit="saveHabit(event)" class="space-y-4">
-                <input type="hidden" id="habit-id">
-
+            <form id="recipe-form" onsubmit="saveCustomRecipe(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Título da Rotina</label>
-                    <input type="text" id="habit-title" required placeholder="e.g., Meditação de manhã" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nome da Receita</label>
+                    <input type="text" id="recipe-name" required placeholder="Ex: Macarrão ao Sugo" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Categoria</label>
-                        <select id="habit-category" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <option value="Health">Saúde</option>
-                            <option value="Productivity">Produtividade</option>
-                            <option value="Fitness">Fitness</option>
-                            <option value="Mindset">Mente</option>
-                            <option value="Custom">Custom</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Hora do dia</label>
-                        <select id="habit-tod" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <option value="Morning">Manhã</option>
-                            <option value="Afternoon">Tarde</option>
-                            <option value="Evening">Noite</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Ingredientes (separados por vírgula)</label>
+                    <textarea id="recipe-ingredients" required placeholder="Ex: Macarrão, Tomate, Queijo, Cebola" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 h-24 resize-none"></textarea>
                 </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Frequência</label>
-                        <select id="habit-frequency" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <option value="Daily">Diário</option>
-                            <option value="Weekdays">Dias úteis</option>
-                            <option value="Weekends">Finais de Semana</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Cor da Tag</label>
-                        <div class="flex items-center space-x-2 pt-1">
-                            <input type="color" id="habit-color" value="#6366f1" class="w-10 h-9 rounded-lg border-0 cursor-pointer bg-transparent">
-                            <span class="text-xs text-gray-400">Escolha a cor</span>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('habit-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-md">Salvar rotina</button>
+                    <button type="button" onclick="closeModal('recipe-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-md">Salvar Receita</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD WEEKLY TASK -->
-    <div id="weekly-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-pop">
-            <button onclick="closeModal('weekly-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+    <!-- MODAL: NUTRITION INFO -->
+    <div id="nutrition-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-xs w-full p-6 shadow-2xl relative animate-pop">
+            <button onclick="closeModal('nutrition-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-xl font-bold mb-4">Adicionar Tarefa Semanal</h3>
             
-            <form id="weekly-form" onsubmit="saveWeeklyTask(event)" class="space-y-4">
+            <div class="flex items-center space-x-3 mb-5">
+                <div class="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center text-brand-600 dark:text-brand-400 text-lg">
+                    <i class="fa-solid fa-apple-whole"></i>
+                </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Título da Tarefa</label>
-                    <input type="text" id="wt-title" required placeholder="e.g., Comprar mantimentos" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <h3 class="text-lg font-bold leading-tight" id="nutrition-title">Ingrediente</h3>
+                    <p class="text-xs text-gray-500" id="nutrition-subtitle">Valores por porção média</p>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Dia da Semana</label>
-                    <select id="wt-day" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        <option value="Segunda">Segunda-feira</option>
-                        <option value="Terça">Terça-feira</option>
-                        <option value="Quarta">Quarta-feira</option>
-                        <option value="Quinta">Quinta-feira</option>
-                        <option value="Sexta">Sexta-feira</option>
-                        <option value="Sábado">Sábado</option>
-                        <option value="Domingo">Domingo</option>
-                    </select>
-                </div>
-
-                <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('weekly-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-md">Salvar Tarefa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD TIME BLOCK -->
-    <div id="timeblock-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-pop">
-            <button onclick="closeModal('timeblock-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <h3 class="text-xl font-bold mb-4">Adicionar bloco</h3>
+            </div>
             
-            <form id="timeblock-form" onsubmit="saveTimeBlock(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Título</label>
-                    <input type="text" id="tb-title" required placeholder="e.g., Deep Work Session" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <span class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Calorias</span>
+                    <span class="font-bold text-lg text-brand-600 dark:text-brand-400" id="nutri-cal">0</span><span class="text-xs font-medium ml-1">kcal</span>
                 </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Hora de Início</label>
-                        <select id="tb-start" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none">
-                            <!-- Populated 06:00 to 23:00 -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Duração (Horas)</label>
-                        <select id="tb-duration" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none">
-                            <option value="1">1 Hora</option>
-                            <option value="2">2 Horas</option>
-                            <option value="3">3 Horas</option>
-                        </select>
-                    </div>
+                <div class="bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <span class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Carbos</span>
+                    <span class="font-bold text-lg" id="nutri-carb">0</span><span class="text-xs font-medium ml-1">g</span>
                 </div>
-
-                <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('timeblock-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-md">Adicionar</button>
+                <div class="bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <span class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Proteínas</span>
+                    <span class="font-bold text-lg" id="nutri-prot">0</span><span class="text-xs font-medium ml-1">g</span>
                 </div>
-            </form>
+                <div class="bg-gray-50 dark:bg-gray-800/80 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <span class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Gorduras</span>
+                    <span class="font-bold text-lg" id="nutri-fat">0</span><span class="text-xs font-medium ml-1">g</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        /**
-         * RoutineCraft - Core JavaScript Engine
-         */
-
-        const DEFAULT_HABITS = [
-            { id: 'h1', title: 'Hydrate (500ml Water)', category: 'Health', tod: 'Morning', frequency: 'Daily', color: '#3b82f6', currentStreak: 3, bestStreak: 7, history: {} },
-            { id: 'h2', title: '30-Min Cardio / Gym Workout', category: 'Fitness', tod: 'Morning', frequency: 'Daily', color: '#10b981', currentStreak: 5, bestStreak: 12, history: {} },
-            { id: 'h3', title: 'Focus Work Session', category: 'Productivity', tod: 'Afternoon', frequency: 'Weekdays', color: '#6366f1', currentStreak: 2, bestStreak: 5, history: {} },
-            { id: 'h4', title: 'Evening Reading / Learning', category: 'Mindset', tod: 'Evening', frequency: 'Daily', color: '#f59e0b', currentStreak: 1, bestStreak: 8, history: {} }
-        ];
-
-        const DEFAULT_TIMEBLOCKS = [
-            { id: 'tb1', title: 'Morning Exercise & Breakfast', startHour: 7, duration: 2 },
-            { id: 'tb2', title: 'Core Product Development', startHour: 9, duration: 3 },
-            { id: 'tb3', title: 'Reading & Wind Down', startHour: 21, duration: 1 }
-        ];
-
-        const DAYS_OF_WEEK = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-
-        // State object
-        let state = {
-            habits: [],
-            timeBlocks: [],
-            weeklyTasks: [],
-            activeCategoryFilter: 'All'
-        };
-
-        function getTodayStr() {
-            const d = new Date();
-            return d.toISOString().split('T')[0];
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            loadStorage();
-            renderHeaderDate();
-            renderRoutines();
-            renderTimeline();
-            renderStats();
-            populateTimeSelects();
-        });
-
-        function loadStorage() {
-            const savedHabits = localStorage.getItem('rc_habits');
-            const savedBlocks = localStorage.getItem('rc_blocks');
-            const savedWeekly = localStorage.getItem('rc_weekly');
-
-            state.habits = savedHabits ? JSON.parse(savedHabits) : DEFAULT_HABITS;
-            state.timeBlocks = savedBlocks ? JSON.parse(savedBlocks) : DEFAULT_TIMEBLOCKS;
-            state.weeklyTasks = savedWeekly ? JSON.parse(savedWeekly) : [];
-        }
-
-        function saveStorage() {
-            localStorage.setItem('rc_habits', JSON.stringify(state.habits));
-            localStorage.setItem('rc_blocks', JSON.stringify(state.timeBlocks));
-            localStorage.setItem('rc_weekly', JSON.stringify(state.weeklyTasks));
-        }
-
+        // Core App Logic
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
-
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-brand-500', 'text-white', 'shadow-lg');
                 btn.classList.add('text-gray-600', 'dark:text-gray-400');
             });
-
             const activeBtn = document.getElementById(`nav-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-lg');
-                activeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+            if (activeBtn) activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-lg');
+            if (tabId === 'tab-fridge') { renderFridgeInventory(); renderRecipes(); }
+        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+
+        /* ==============================================================
+           NUTRITION LOGIC (Mock Database)
+           ============================================================== */
+        const MOCK_NUTRITION_DB = {
+            'leite': { calories: 60, carbs: 5, protein: 3.2, fat: 3 }, // por 100ml
+            'ovo': { calories: 155, carbs: 1.1, protein: 13, fat: 11 }, // por 100g
+            'tomate': { calories: 18, carbs: 3.9, protein: 0.9, fat: 0.2 },
+            'macarrão': { calories: 131, carbs: 25, protein: 5, fat: 1.1 },
+            'queijo': { calories: 402, carbs: 1.3, protein: 25, fat: 33 },
+            'frango': { calories: 165, carbs: 0, protein: 31, fat: 3.6 },
+            'arroz': { calories: 130, carbs: 28, protein: 2.7, fat: 0.3 }
+        };
+
+        function getNutritionMock(name) {
+            const key = name.toLowerCase().trim();
+            if (MOCK_NUTRITION_DB[key]) return MOCK_NUTRITION_DB[key];
+            
+            // Generate random but persistent values for unknown ingredients based on string hash
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) { hash = key.charCodeAt(i) + ((hash << 5) - hash); }
+            Math.seed = hash;
+            const pseudoRandom = () => { Math.seed = (Math.seed * 9301 + 49297) % 233280; return Math.seed / 233280; };
+            
+            return {
+                calories: Math.floor(pseudoRandom() * 250) + 20,
+                carbs: (pseudoRandom() * 30).toFixed(1),
+                protein: (pseudoRandom() * 20).toFixed(1),
+                fat: (pseudoRandom() * 15).toFixed(1)
+            };
+        }
+
+        function showNutrition(id) {
+            const item = fridgeState.items.find(i => i.id === id);
+            if (!item) return;
+
+            const nutrition = getNutritionMock(item.name);
+            
+            document.getElementById('nutrition-title').innerText = item.name;
+            document.getElementById('nutrition-subtitle').innerText = item.unit === 'un' ? 'Valores ref. a 1 unidade' : 'Valores ref. a 100' + item.unit;
+            
+            document.getElementById('nutri-cal').innerText = nutrition.calories;
+            document.getElementById('nutri-carb').innerText = nutrition.carbs;
+            document.getElementById('nutri-prot').innerText = nutrition.protein;
+            document.getElementById('nutri-fat').innerText = nutrition.fat;
+
+            openModal('nutrition-modal');
+        }
+
+
+        /* ==============================================================
+           FRIDGE & RECIPE LOGIC
+           ============================================================== */
+
+        let fridgeState = {
+            items: [
+                { id: 'i1', name: 'Leite', quantity: 1000, unit: 'ml', expiry: '2026-10-15' },
+                { id: 'i2', name: 'Ovo', quantity: 12, unit: 'un', expiry: '2026-10-10' },
+                { id: 'i3', name: 'Tomate', quantity: 500, unit: 'g', expiry: '2026-10-06' }
+            ],
+            customRecipes: []
+        };
+        const DEFAULT_RECIPES = [
+            { id: 'r1', name: 'Panqueca', ingredients: ['Ovo', 'Leite'] },
+            { id: 'r2', name: 'Omelete', ingredients: ['Ovo', 'Tomate'] }
+        ];
+
+        let currentFridgeView = 'list';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFridgeStorage();
+            
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            document.getElementById('fridge-item-expiry').value = nextWeek.toISOString().split('T')[0];
+            
+            if(!document.getElementById('tab-fridge').classList.contains('hidden')) {
+                renderFridgeInventory(); 
+                renderRecipes();
             }
+        });
 
-            if (tabId === 'tab-stats') renderStats();
-            if (tabId === 'tab-planner') renderTimeline();
-            if (tabId === 'tab-weekly') renderWeeklyTasks();
+        function loadFridgeStorage() {
+            const saved = localStorage.getItem('fridge_data_v2');
+            if (saved) fridgeState = JSON.parse(saved);
         }
 
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
+        function saveFridgeStorage() {
+            localStorage.setItem('fridge_data_v2', JSON.stringify(fridgeState));
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            if (modalId === 'habit-modal') document.getElementById('habit-form').reset();
-            if (modalId === 'weekly-modal') document.getElementById('weekly-form').reset();
-        }
+        function setFridgeView(view) {
+            currentFridgeView = view;
+            const btnList = document.getElementById('btn-view-list');
+            const btnShelf = document.getElementById('btn-view-shelf');
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const isDark = html.classList.toggle('dark');
-            document.getElementById('theme-label').innerText = isDark ? 'Dark Mode' : 'Light Mode';
-        }
+            [btnList, btnShelf].forEach(btn => {
+                btn.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 transition-all';
+            });
 
-        function renderHeaderDate() {
-            const options = { weekday: 'long', month: 'short', day: 'numeric' };
-            document.getElementById('current-date-str').innerText = new Date().toLocaleDateString('en-US', options);
-        }
-
-        function renderRoutines() {
-            const container = document.getElementById('routines-container');
-            const today = getTodayStr();
-
-            let filtered = state.habits;
-            if (state.activeCategoryFilter !== 'All') {
-                filtered = state.habits.filter(h => h.category === state.activeCategoryFilter);
+            if (view === 'list') {
+                btnList.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-white dark:bg-darkcard shadow-sm text-brand-500 transition-all';
+            } else {
+                btnShelf.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-white dark:bg-darkcard shadow-sm text-brand-500 transition-all';
             }
+            renderFridgeInventory();
+        }
 
-            const total = filtered.length;
-            const completedCount = filtered.filter(h => h.history && h.history[today]).length;
-            const percent = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+        function getStatus(expiryDate) {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const exp = new Date(expiryDate);
+            exp.setHours(0,0,0,0);
+            
+            const diffTime = exp - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            document.getElementById('progress-percentage-text').innerText = `${percent}% Completed (${completedCount}/${total})`;
-            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+            if (diffDays < 0) return { label: 'Vencido', color: 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400', dot: 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]' };
+            if (diffDays <= 3) return { label: `Vence em ${diffDays}d`, color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400', dot: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]' };
+            return { label: 'Bom', color: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400', dot: 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]' };
+        }
 
-            container.innerHTML = '';
+        function addFridgeItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('fridge-item-name').value.trim();
+            const qty = parseFloat(document.getElementById('fridge-item-qty').value);
+            const unit = document.getElementById('fridge-item-unit').value;
+            const expiry = document.getElementById('fridge-item-expiry').value;
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 border-2 border-dashed border-gray-200 dark:border-darkborder rounded-2xl">
-                        <i class="fa-solid fa-clipboard-list text-3xl text-gray-400 mb-2"></i>
-                        <p class="text-sm font-medium text-gray-500">No routines found in this category.</p>
-                    </div>
-                `;
+            if (name && qty > 0) {
+                const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+                const existingIndex = fridgeState.items.findIndex(i => i.name === formattedName && i.unit === unit);
+                
+                if (existingIndex > -1) {
+                    fridgeState.items[existingIndex].quantity += qty;
+                    fridgeState.items[existingIndex].expiry = expiry;
+                } else {
+                    fridgeState.items.push({ id: 'item_' + Date.now(), name: formattedName, quantity: qty, unit: unit, expiry: expiry });
+                }
+
+                saveFridgeStorage();
+                renderFridgeInventory();
+                renderRecipes();
+                
+                document.getElementById('fridge-item-name').value = '';
+                document.getElementById('fridge-item-qty').value = '';
+            }
+        }
+
+        function removeFridgeItem(id) {
+            fridgeState.items = fridgeState.items.filter(i => i.id !== id);
+            saveFridgeStorage();
+            renderFridgeInventory();
+            renderRecipes();
+        }
+
+        function changeQuantity(id, changeAmount) {
+            const item = fridgeState.items.find(i => i.id === id);
+            if (!item) return;
+
+            item.quantity += changeAmount;
+            if (item.quantity <= 0) {
+                removeFridgeItem(id);
+            } else {
+                saveFridgeStorage();
+                renderFridgeInventory();
+            }
+        }
+
+        function manualQuantityUpdate(id, inputElement) {
+            const item = fridgeState.items.find(i => i.id === id);
+            if (!item) return;
+            
+            const newQty = parseFloat(inputElement.value);
+            if (isNaN(newQty) || newQty <= 0) {
+                removeFridgeItem(id);
+            } else {
+                item.quantity = newQty;
+                saveFridgeStorage();
+                renderFridgeInventory();
+            }
+        }
+
+        function renderFridgeInventory() {
+            document.getElementById('inventory-count').innerText = `${fridgeState.items.length} itens`;
+            const sortedItems = [...fridgeState.items].sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
+
+            const listContainer = document.getElementById('fridge-list-container');
+            const shelfContainer = document.getElementById('fridge-shelf-container');
+
+            if (currentFridgeView === 'list') {
+                listContainer.classList.remove('hidden');
+                shelfContainer.classList.add('hidden');
+                shelfContainer.classList.remove('flex');
+                renderListView(sortedItems);
+            } else {
+                listContainer.classList.add('hidden');
+                shelfContainer.classList.remove('hidden');
+                shelfContainer.classList.add('flex');
+                renderShelfView(sortedItems);
+            }
+        }
+
+        function renderListView(items) {
+            const tbody = document.getElementById('inventory-table-body');
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-400 italic">Sua despensa está vazia.</td></tr>`;
                 return;
             }
 
-            const timesOfDay = ['Morning', 'Afternoon', 'Evening'];
+            items.forEach(item => {
+                const status = getStatus(item.expiry);
+                const step = (item.unit === 'g' || item.unit === 'ml') ? 50 : 1;
+                const displayDate = item.expiry.split('-').reverse().join('/').slice(0, 8);
 
-            timesOfDay.forEach(tod => {
-                const groupHabits = filtered.filter(h => h.tod === tod);
-                if (groupHabits.length === 0) return;
-
-                const section = document.createElement('div');
-                section.className = 'space-y-3';
-
-                let icon = tod === 'Morning' ? 'fa-sun text-amber-500' : tod === 'Afternoon' ? 'fa-cloud-sun text-orange-500' : 'fa-moon text-indigo-400';
-
-                const habitsCardsHtml = groupHabits.map(habit => {
-                    const isDone = habit.history && habit.history[today];
-                    return `
-                        <div class="bg-white dark:bg-darkcard border ${isDone ? 'border-emerald-500/50 bg-emerald-50/20 dark:bg-emerald-950/10' : 'border-gray-200 dark:border-darkborder'} rounded-2xl p-4 flex items-center justify-between shadow-sm transition-all hover:border-brand-500/50">
-                            <div class="flex items-center space-x-4">
-                                <button onclick="toggleHabitDone('${habit.id}')" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDone ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-brand-500'}">
-                                    <i class="fa-solid ${isDone ? 'fa-check text-lg' : 'fa-circle text-xs'}"></i>
-                                </button>
-                                <div>
-                                    <h4 class="font-semibold text-sm ${isDone ? 'line-through text-gray-400 dark:text-gray-500' : ''}">${habit.title}</h4>
-                                    <div class="flex items-center space-x-2 mt-1">
-                                        <span class="text-[10px] px-2 py-0.5 rounded-md font-semibold text-white" style="background-color: ${habit.color}">${habit.category}</span>
-                                        <span class="text-xs text-gray-400"><i class="fa-solid fa-fire text-amber-500 mr-1"></i>${habit.currentStreak || 0} streak</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <button onclick="editHabit('${habit.id}')" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xs">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                                <button onclick="deleteHabit('${habit.id}')" class="p-2 text-gray-400 hover:text-red-500 text-xs">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-3 px-4">
+                        <button onclick="showNutrition('${item.id}')" class="font-medium text-left hover:text-brand-500 transition-colors inline-flex items-center gap-1.5 focus:outline-none">
+                            ${item.name} <i class="fa-solid fa-circle-info text-[10px] text-gray-400"></i>
+                        </button>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 rounded-lg w-max px-1 py-1">
+                            <button onclick="changeQuantity('${item.id}', -${step})" class="w-6 h-6 rounded flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">-</button>
+                            <input type="number" value="${item.quantity}" onchange="manualQuantityUpdate('${item.id}', this)" class="w-12 text-center bg-transparent border-none focus:outline-none text-sm font-semibold p-0">
+                            <span class="text-xs text-gray-400 font-medium w-4">${item.unit}</span>
+                            <button onclick="changeQuantity('${item.id}', ${step})" class="w-6 h-6 rounded flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">+</button>
                         </div>
-                    `;
-                }).join('');
-
-                section.innerHTML = `
-                    <div class="flex items-center space-x-2 text-sm font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-darkborder pb-2">
-                        <i class="fa-solid ${icon}"></i>
-                        <span>${tod} Routines</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        ${habitsCardsHtml}
-                    </div>
+                    </td>
+                    <td class="py-3 px-4 text-gray-500">${displayDate}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-1 rounded-md text-[10px] font-bold ${status.color}">${status.label}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <button onclick="removeFridgeItem('${item.id}')" class="text-gray-400 hover:text-red-500 transition-colors">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 `;
-
-                container.appendChild(section);
+                tbody.appendChild(tr);
             });
         }
 
-        function toggleHabitDone(id) {
-            const today = getTodayStr();
-            const habit = state.habits.find(h => h.id === id);
-            if (!habit) return;
+        function renderShelfView(items) {
+            const container = document.getElementById('fridge-shelf-container');
+            container.innerHTML = '';
+            
+            const shelfGroups = [[], [], []];
+            items.forEach((item, i) => shelfGroups[i % 3].push(item));
 
-            if (!habit.history) habit.history = {};
-
-            if (habit.history[today]) {
-                delete habit.history[today];
-                habit.currentStreak = Math.max(0, habit.currentStreak - 1);
-            } else {
-                habit.history[today] = true;
-                habit.currentStreak = (habit.currentStreak || 0) + 1;
-                if (habit.currentStreak > (habit.bestStreak || 0)) {
-                    habit.bestStreak = habit.currentStreak;
-                }
-                confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
-            }
-
-            saveStorage();
-            renderRoutines();
-        }
-
-        function filterCategory(cat) {
-            state.activeCategoryFilter = cat;
-            document.querySelectorAll('.category-filter-btn').forEach(btn => {
-                const btnCat = btn.getAttribute('data-category');
-                if (btnCat === cat) {
-                    btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all whitespace-nowrap";
+            shelfGroups.forEach(group => {
+                const shelf = document.createElement('div');
+                shelf.className = 'w-full min-h-[90px] border-b-[8px] border-gray-300 dark:border-gray-600/60 flex flex-wrap gap-4 items-end pb-1 px-4';
+                
+                if(group.length === 0) {
+                    shelf.innerHTML = `<span class="w-full text-center text-xs text-gray-400 dark:text-gray-500 pb-2 italic opacity-50">Prateleira vazia</span>`;
                 } else {
-                    btn.className = "category-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-darkcard text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-darkborder hover:bg-gray-50 dark:hover:bg-gray-800 transition-all whitespace-nowrap";
+                    group.forEach(item => {
+                        const status = getStatus(item.expiry);
+                        
+                        shelf.innerHTML += `
+                            <div class="relative group">
+                                <div onclick="showNutrition('${item.id}')" class="bg-white dark:bg-darkcard px-3 py-2.5 rounded-t-lg rounded-b-sm border border-gray-200 dark:border-gray-600 shadow-sm flex flex-col items-center justify-center transform transition-all hover:-translate-y-1.5 hover:border-brand-400 cursor-pointer w-[85px]">
+                                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-200 text-center w-full truncate leading-tight">${item.name}</span>
+                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-1 font-medium">${item.quantity} ${item.unit}</span>
+                                    <div class="w-2 h-2 rounded-full mt-2 ${status.dot}"></div>
+                                </div>
+                                <button onclick="removeFridgeItem('${item.id}')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md z-10">
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
                 }
+                container.appendChild(shelf);
             });
-            renderRoutines();
         }
 
-        function saveHabit(e) {
-            e.preventDefault();
-            const id = document.getElementById('habit-id').value;
-            const title = document.getElementById('habit-title').value.trim();
-            const category = document.getElementById('habit-category').value;
-            const tod = document.getElementById('habit-tod').value;
-            const frequency = document.getElementById('habit-frequency').value;
-            const color = document.getElementById('habit-color').value;
-
-            if (id) {
-                const index = state.habits.findIndex(h => h.id === id);
-                if (index !== -1) {
-                    state.habits[index] = { ...state.habits[index], title, category, tod, frequency, color };
-                }
-            } else {
-                const newHabit = {
-                    id: 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
-                    title,
-                    category,
-                    tod,
-                    frequency,
-                    color,
-                    currentStreak: 0,
-                    bestStreak: 0,
-                    history: {}
-                };
-                state.habits.push(newHabit);
-            }
-
-            saveStorage();
-            closeModal('habit-modal');
-            filterCategory('All');
-        }
-
-        function editHabit(id) {
-            const habit = state.habits.find(h => h.id === id);
-            if (!habit) return;
-
-            document.getElementById('habit-id').value = habit.id;
-            document.getElementById('habit-title').value = habit.title;
-            document.getElementById('habit-category').value = habit.category;
-            document.getElementById('habit-tod').value = habit.tod;
-            document.getElementById('habit-frequency').value = habit.frequency;
-            document.getElementById('habit-color').value = habit.color;
-            document.getElementById('habit-modal-title').innerText = 'Edit Routine';
-
-            openModal('habit-modal');
-        }
-
-        function deleteHabit(id) {
-            if (confirm('Are you sure you want to delete this routine?')) {
-                state.habits = state.habits.filter(h => h.id !== id);
-                saveStorage();
-                renderRoutines();
-            }
-        }
-
-        function renderWeeklyTasks() {
-            const container = document.getElementById('weekly-days-container');
-            if (!container) return;
+        function renderRecipes() {
+            const container = document.getElementById('recipes-container');
             container.innerHTML = '';
 
-            DAYS_OF_WEEK.forEach(day => {
-                const dayTasks = state.weeklyTasks.filter(t => t.day === day);
-                
+            const allRecipes = [...DEFAULT_RECIPES, ...(fridgeState.customRecipes || [])];
+            const availableIngredients = fridgeState.items.map(i => i.name.toLowerCase().trim());
+
+            if (allRecipes.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-500">Nenhuma receita encontrada.</p>`;
+                return;
+            }
+
+            allRecipes.forEach((recipe) => {
+                const missing = recipe.ingredients.filter(ing => !availableIngredients.includes(ing.toLowerCase().trim()));
+                const canMake = missing.length === 0;
+
+                const ingHtml = recipe.ingredients.map(ing => {
+                    const hasIng = availableIngredients.includes(ing.toLowerCase().trim());
+                    return `<span class="text-[10px] px-2 py-1 rounded-md font-medium border ${hasIng ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 border-emerald-200 dark:border-emerald-800' : 'bg-red-50 dark:bg-red-900/30 text-red-600 border-red-200 dark:border-red-800'}">${ing}</span>`;
+                }).join('');
+
                 const card = document.createElement('div');
-                card.className = 'bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3';
-
-                const tasksListHtml = dayTasks.length === 0 
-                    ? `<p class="text-xs text-gray-400 italic">Nenhuma tarefa</p>` 
-                    : dayTasks.map(task => `
-                        <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800/60 p-2.5 rounded-xl border border-gray-100 dark:border-gray-800">
-                            <div class="flex items-center space-x-2.5">
-                                <button onclick="toggleWeeklyTaskDone('${task.id}')" class="w-5 h-5 rounded-md flex items-center justify-center border transition-all ${task.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-300 dark:border-gray-600 text-transparent'}">
-                                    <i class="fa-solid fa-check text-[10px]"></i>
-                                </button>
-                                <span class="text-xs font-medium ${task.completed ? 'line-through text-gray-400' : ''}">${task.title}</span>
-                            </div>
-                            <button onclick="deleteWeeklyTask('${task.id}')" class="text-gray-400 hover:text-red-500 text-xs p-1">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    `).join('');
-
+                card.className = `p-4 rounded-xl border ${canMake ? 'border-brand-500 bg-brand-50/30 dark:bg-brand-900/10' : 'border-gray-200 dark:border-darkborder bg-white dark:bg-darkcard'} flex flex-col justify-between space-y-3 transition-all`;
+                
                 card.innerHTML = `
                     <div>
-                        <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-2 mb-3">
-                            <h4 class="font-bold text-sm tracking-wide text-brand-500">${day}</h4>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 font-semibold">${dayTasks.length}</span>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-utensils text-gray-400"></i> ${recipe.name}
+                            </h4>
+                            ${recipe.id.startsWith('c_') ? `<button onclick="deleteCustomRecipe('${recipe.id}')" class="text-xs text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
-                        <div class="space-y-2">
-                            ${tasksListHtml}
-                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-2">${ingHtml}</div>
+                    </div>
+                    <div>
+                        <button onclick="cookRecipe('${recipe.id}')" ${!canMake ? 'disabled' : ''} class="w-full mt-2 py-2 rounded-lg text-xs font-semibold transition-colors ${canMake ? 'bg-brand-500 hover:bg-brand-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'}">
+                            ${canMake ? 'Cozinhar (-1 un / 100g)' : `Faltam ${missing.length} item(s)`}
+                        </button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function saveWeeklyTask(e) {
+        function saveCustomRecipe(e) {
             e.preventDefault();
-            const title = document.getElementById('wt-title').value.trim();
-            const day = document.getElementById('wt-day').value;
-
-            if (!title) return;
-
-            const newTask = {
-                id: 'wt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
-                title,
-                day,
-                completed: false
-            };
-
-            state.weeklyTasks.push(newTask);
-            saveStorage();
-            closeModal('weekly-modal');
-            renderWeeklyTasks();
-        }
-
-        function toggleWeeklyTaskDone(id) {
-            const task = state.weeklyTasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                saveStorage();
-                renderWeeklyTasks();
+            const name = document.getElementById('recipe-name').value;
+            const ingString = document.getElementById('recipe-ingredients').value;
+            const ingredients = ingString.split(',').map(s => s.trim()).filter(s => s !== '');
+            
+            if (name && ingredients.length > 0) {
+                if (!fridgeState.customRecipes) fridgeState.customRecipes = [];
+                fridgeState.customRecipes.push({ id: 'c_' + Date.now(), name, ingredients });
+                saveFridgeStorage();
+                renderRecipes();
+                closeModal('recipe-modal');
             }
         }
 
-        function deleteWeeklyTask(id) {
-            state.weeklyTasks = state.weeklyTasks.filter(t => t.id !== id);
-            saveStorage();
-            renderWeeklyTasks();
-        }
-
-        function populateTimeSelects() {
-            const select = document.getElementById('tb-start');
-            select.innerHTML = '';
-            for (let i = 6; i <= 22; i++) {
-                const hourStr = i < 10 ? `0${i}:00` : `${i}:00`;
-                select.innerHTML += `<option value="${i}">${hourStr}</option>`;
+        function deleteCustomRecipe(id) {
+            if(confirm("Remover esta receita?")) {
+                fridgeState.customRecipes = fridgeState.customRecipes.filter(r => r.id !== id);
+                saveFridgeStorage();
+                renderRecipes();
             }
         }
 
-        function openTimeBlockModal() {
-            openModal('timeblock-modal');
-        }
+        function cookRecipe(recipeId) {
+            const allRecipes = [...DEFAULT_RECIPES, ...(fridgeState.customRecipes || [])];
+            const recipe = allRecipes.find(r => r.id === recipeId);
+            if (!recipe) return;
 
-        function saveTimeBlock(e) {
-            e.preventDefault();
-            const title = document.getElementById('tb-title').value;
-            const startHour = parseInt(document.getElementById('tb-start').value);
-            const duration = parseInt(document.getElementById('tb-duration').value);
-
-            const newBlock = {
-                id: 'tb_' + Date.now(),
-                title,
-                startHour,
-                duration
-            };
-
-            state.timeBlocks.push(newBlock);
-            saveStorage();
-            closeModal('timeblock-modal');
-            renderTimeline();
-        }
-
-        function renderTimeline() {
-            const container = document.getElementById('timeline-container');
-            container.innerHTML = '';
-
-            for (let hour = 6; hour <= 23; hour++) {
-                const hourLabel = hour < 10 ? `0${hour}:00` : `${hour}:00`;
-                const blocksAtHour = state.timeBlocks.filter(b => b.startHour === hour);
-
-                const row = document.createElement('div');
-                row.className = 'relative min-h-[50px] border-t border-gray-100 dark:border-gray-800 flex items-start pt-2';
-
-                row.innerHTML = `
-                    <span class="absolute -left-16 text-xs text-gray-400 font-mono w-12 text-right">${hourLabel}</span>
-                    <div class="w-full space-y-2">
-                        ${blocksAtHour.map(block => `
-                            <div class="bg-brand-500/10 border-l-4 border-brand-500 text-brand-600 dark:text-brand-300 p-3 rounded-r-xl flex justify-between items-center shadow-sm">
-                                <div>
-                                    <h5 class="font-bold text-xs">${block.title}</h5>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">${block.startHour}:00 - ${block.startHour + block.duration}:00 (${block.duration} hr)</p>
-                                </div>
-                                <button onclick="deleteTimeBlock('${block.id}')" class="text-gray-400 hover:text-red-500 text-xs">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(row);
-            }
-        }
-
-        function deleteTimeBlock(id) {
-            state.timeBlocks = state.timeBlocks.filter(b => b.id !== id);
-            saveStorage();
-            renderTimeline();
-        }
-
-        function renderStats() {
-            const total = state.habits.length;
-            const bestStreak = state.habits.reduce((max, h) => Math.max(max, h.bestStreak || 0), 0);
-            const today = getTodayStr();
-            const todayCompleted = state.habits.filter(h => h.history && h.history[today]).length;
-
-            document.getElementById('stat-total-routines').innerText = total;
-            document.getElementById('stat-best-streak').innerHTML = `${bestStreak} <span class="text-sm font-normal text-gray-400">days</span>`;
-            document.getElementById('stat-today-completed').innerText = `${todayCompleted} / ${total}`;
-            document.getElementById('stat-weekly-rate').innerText = total === 0 ? '0%' : `${Math.round((todayCompleted / total) * 100)}%`;
-
-            const tableBody = document.getElementById('weekly-matrix-body');
-            tableBody.innerHTML = '';
-
-            const datesOfWeek = getWeekDates();
-
-            state.habits.forEach(habit => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50/50 dark:hover:bg-gray-800/40';
-
-                let daysHtml = '';
-                datesOfWeek.forEach(dateStr => {
-                    const isDone = habit.history && habit.history[dateStr];
-                    daysHtml += `
-                        <td class="py-3 px-2 text-center">
-                            <span class="inline-block w-5 h-5 rounded-md ${isDone ? 'bg-emerald-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-transparent'} text-[10px] flex items-center justify-center mx-auto">
-                                <i class="fa-solid fa-check"></i>
-                            </span>
-                        </td>
-                    `;
-                });
-
-                tr.innerHTML = `
-                    <td class="py-3 px-4 font-medium flex items-center space-x-2">
-                        <span class="w-2 h-2 rounded-full" style="background-color: ${habit.color}"></span>
-                        <span>${habit.title}</span>
-                    </td>
-                    ${daysHtml}
-                    <td class="py-3 px-4 text-right font-semibold text-amber-500">
-                        <i class="fa-solid fa-fire text-xs mr-1"></i>${habit.currentStreak || 0}
-                    </td>
-                `;
-
-                tableBody.appendChild(tr);
-            });
-        }
-
-        function getWeekDates() {
-            const curr = new Date();
-            const first = curr.getDate() - curr.getDay() + 1;
-            const week = [];
-
-            for (let i = 0; i < 7; i++) {
-                const next = new Date(curr.setDate(first + i));
-                week.push(next.toISOString().split('T')[0]);
-            }
-            return week;
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `routinecraft_backup_${getTodayStr()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        function importData(event) {
-            const fileReader = new FileReader();
-            fileReader.onload = function (e) {
-                try {
-                    const importedState = JSON.parse(e.target.result);
-                    if (importedState.habits) {
-                        state = importedState;
-                        saveStorage();
-                        renderRoutines();
-                        renderTimeline();
-                        renderWeeklyTasks();
-                        renderStats();
-                        alert('Database backup restored successfully!');
-                    }
-                } catch (err) {
-                    alert('Invalid JSON backup file.');
+            recipe.ingredients.forEach(reqIng => {
+                const reqName = reqIng.toLowerCase().trim();
+                const item = fridgeState.items.find(i => i.name.toLowerCase() === reqName);
+                if (item) {
+                    const deductAmount = (item.unit === 'g' || item.unit === 'ml') ? 100 : 1;
+                    item.quantity -= deductAmount;
                 }
-            };
-            fileReader.readAsText(event.target.files[0]);
-        }
+            });
 
-        function confirmResetData() {
-            if (confirm('Are you sure you want to erase ALL habit, task, and schedule data?')) {
-                localStorage.removeItem('rc_habits');
-                localStorage.removeItem('rc_blocks');
-                localStorage.removeItem('rc_weekly');
-                state.habits = [];
-                state.timeBlocks = [];
-                state.weeklyTasks = [];
-                renderRoutines();
-                renderTimeline();
-                renderWeeklyTasks();
-                renderStats();
-            }
+            fridgeState.items = fridgeState.items.filter(i => i.quantity > 0);
+
+            saveFridgeStorage();
+            renderFridgeInventory();
+            renderRecipes();
+            
+            confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 }, colors: ['#d47bb6', '#ffffff'] });
         }
     </script>
 </body>
