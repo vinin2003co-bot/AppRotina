@@ -1,23 +1,22 @@
 import { renderStats } from '../statistics/statistics.js';
 import { renderWeeklyTasks } from '../weekly/weekly.js';
 import { renderTimeline } from '../planner/planner.js';
-import {
-    renderFridgeInventory
-} from '../fridge/inventory.js';
-import {
-    renderRecipes
-} from '../fridge/recipes.js';
+import { renderRoutines } from '../routines/routines.js';
+import { renderFridge } from '../fridge/index.js';
 
 export function switchTab(tabId) {
     document
         .querySelectorAll('.tab-content')
-        .forEach(tab => {
-            tab.classList.add('hidden');
+        .forEach(element => {
+            element.classList.add('hidden');
         });
 
-    document
-        .getElementById(tabId)
-        ?.classList.remove('hidden');
+    const tab =
+        document.getElementById(tabId);
+
+    if (!tab) return;
+
+    tab.classList.remove('hidden');
 
     document
         .querySelectorAll('.nav-btn')
@@ -51,27 +50,31 @@ export function switchTab(tabId) {
     }
 
     switch (tabId) {
-        case 'tab-stats':
-            renderStats();
-            break;
-
-        case 'tab-planner':
-            renderTimeline();
+        case 'tab-routines':
+            renderRoutines();
             break;
 
         case 'tab-weekly':
             renderWeeklyTasks();
             break;
 
+        case 'tab-planner':
+            renderTimeline();
+            break;
+
         case 'tab-fridge':
-            renderFridgeInventory();
-            renderRecipes();
+            renderFridge();
+            break;
+
+        case 'tab-stats':
+            renderStats();
             break;
     }
 }
 
 export function toggleTheme() {
-    const html = document.documentElement;
+    const html =
+        document.documentElement;
 
     const isDark =
         html.classList.toggle('dark');
@@ -81,13 +84,17 @@ export function toggleTheme() {
 
     if (label) {
         label.innerText =
-            isDark ? 'Dark Mode' : 'Light Mode';
+            isDark
+                ? 'Modo Escuro'
+                : 'Modo Claro';
     }
 }
 
 export function renderHeaderDate() {
     const element =
-        document.getElementById('current-date-str');
+        document.getElementById(
+            'current-date-str'
+        );
 
     if (!element) return;
 
