@@ -139,3 +139,27 @@ export const DEFAULT_RECIPES = [
         ingredients: ['Ovo', 'Tomate']
     }
 ];
+
+export const DEFAULT_FRIDGE_ITEMS = [
+    {
+        id: 'i1',
+        name: 'Leite',
+        quantity: 1000,
+        unit: 'ml',
+        expiry: '2026-10-15'
+    },
+    {
+        id: 'i2',
+        name: 'Ovo',
+        quantity: 12,
+        unit: 'un',
+        expiry: '2026-10-10'
+    },
+    {
+        id: 'i3',
+        name: 'Tomate',
+        quantity: 500,
+        unit: 'g',
+        expiry: '2026-10-06'
+    }
+];
