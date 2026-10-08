@@ -1,25 +1,41 @@
-import { state, fridgeState } from './state.js';
 import {
     DEFAULT_HABITS,
-    DEFAULT_TIMEBLOCKS
+    DEFAULT_TIMEBLOCKS,
+    DEFAULT_FRIDGE_ITEMS
 } from './constants.js';
 
+import {
+    state,
+    fridgeState,
+    setRoutineState,
+    setFridgeState
+} from './state.js';
+
 export function loadStorage() {
-    const savedHabits = localStorage.getItem('rc_habits');
-    const savedBlocks = localStorage.getItem('rc_blocks');
-    const savedWeekly = localStorage.getItem('rc_weekly');
+    const savedHabits =
+        localStorage.getItem('rc_habits');
 
-    state.habits = savedHabits
-        ? JSON.parse(savedHabits)
-        : structuredClone(DEFAULT_HABITS);
+    const savedBlocks =
+        localStorage.getItem('rc_blocks');
 
-    state.timeBlocks = savedBlocks
-        ? JSON.parse(savedBlocks)
-        : structuredClone(DEFAULT_TIMEBLOCKS);
+    const savedWeekly =
+        localStorage.getItem('rc_weekly');
 
-    state.weeklyTasks = savedWeekly
-        ? JSON.parse(savedWeekly)
-        : [];
+    setRoutineState({
+        habits: savedHabits
+            ? JSON.parse(savedHabits)
+            : structuredClone(DEFAULT_HABITS),
+
+        timeBlocks: savedBlocks
+            ? JSON.parse(savedBlocks)
+            : structuredClone(DEFAULT_TIMEBLOCKS),
+
+        weeklyTasks: savedWeekly
+            ? JSON.parse(savedWeekly)
+            : [],
+
+        activeCategoryFilter: 'All'
+    });
 }
 
 export function saveStorage() {
@@ -40,14 +56,25 @@ export function saveStorage() {
 }
 
 export function loadFridgeStorage() {
-    const saved = localStorage.getItem('fridge_data_v2');
+    const saved =
+        localStorage.getItem('fridge_data_v2');
 
-    if (!saved) return;
+    if (saved) {
+        try {
+            setFridgeState(JSON.parse(saved));
+            return;
+        } catch (error) {
+            console.error(
+                'Could not load fridge data:',
+                error
+            );
+        }
+    }
 
-    const parsed = JSON.parse(saved);
-
-    fridgeState.items = parsed.items ?? [];
-    fridgeState.customRecipes = parsed.customRecipes ?? [];
+    setFridgeState({
+        items: structuredClone(DEFAULT_FRIDGE_ITEMS),
+        customRecipes: []
+    });
 }
 
 export function saveFridgeStorage() {
@@ -55,4 +82,11 @@ export function saveFridgeStorage() {
         'fridge_data_v2',
         JSON.stringify(fridgeState)
     );
+}
+
+export function clearStorage() {
+    localStorage.removeItem('rc_habits');
+    localStorage.removeItem('rc_blocks');
+    localStorage.removeItem('rc_weekly');
+    localStorage.removeItem('fridge_data_v2');
 }
