@@ -1,6 +1,5 @@
 import {
-    DEFAULT_HABITS,
-    DEFAULT_TIMEBLOCKS
+    DEFAULT_FRIDGE_ITEMS
 } from './constants.js';
 
 export const state = {
@@ -11,30 +10,7 @@ export const state = {
 };
 
 export const fridgeState = {
-    items: [
-        {
-            id: 'i1',
-            name: 'Leite',
-            quantity: 1000,
-            unit: 'ml',
-            expiry: '2026-10-15'
-        },
-        {
-            id: 'i2',
-            name: 'Ovo',
-            quantity: 12,
-            unit: 'un',
-            expiry: '2026-10-10'
-        },
-        {
-            id: 'i3',
-            name: 'Tomate',
-            quantity: 500,
-            unit: 'g',
-            expiry: '2026-10-06'
-        }
-    ],
-
+    items: [],
     customRecipes: []
 };
 
@@ -42,8 +18,45 @@ export const uiState = {
     currentFridgeView: 'list'
 };
 
-export function initializeState() {
-    state.habits = structuredClone(DEFAULT_HABITS);
-    state.timeBlocks = structuredClone(DEFAULT_TIMEBLOCKS);
+export function setRoutineState(newState = {}) {
+    state.habits = Array.isArray(newState.habits)
+        ? newState.habits
+        : [];
+
+    state.timeBlocks = Array.isArray(newState.timeBlocks)
+        ? newState.timeBlocks
+        : [];
+
+    state.weeklyTasks = Array.isArray(newState.weeklyTasks)
+        ? newState.weeklyTasks
+        : [];
+
+    state.activeCategoryFilter =
+        newState.activeCategoryFilter || 'All';
+}
+
+export function setFridgeState(newState = {}) {
+    fridgeState.items = Array.isArray(newState.items)
+        ? newState.items
+        : [];
+
+    fridgeState.customRecipes =
+        Array.isArray(newState.customRecipes)
+            ? newState.customRecipes
+            : [];
+}
+
+export function resetState() {
+    state.habits = [];
+    state.timeBlocks = [];
     state.weeklyTasks = [];
+    state.activeCategoryFilter = 'All';
+
+    fridgeState.items = [];
+    fridgeState.customRecipes = [];
+}
+
+export function initializeEmptyFridge() {
+    fridgeState.items = structuredClone(DEFAULT_FRIDGE_ITEMS);
+    fridgeState.customRecipes = [];
 }
