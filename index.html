@@ -63,31 +63,35 @@
 
                 <!-- Navigation Tabs -->
                 <nav class="space-y-1" id="navigation-tabs">
-                    <button  data-action="switch-tab" data-tab="tab-routines" id="nav-tab-routines" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-list-check w-5 text-center"></i>
-                        <span>Rotinas Diárias</span>
-                    </button>
-                    <button  data-action="switch-tab" data-tab="tab-weekly" id="nav-tab-weekly" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-calendar-days w-5 text-center"></i>
-                        <span>Tarefas por Dia</span>
-                    </button>
-                    <button  data-action="switch-tab" data-tab="tab-planner" id="nav-tab-planner" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-clock w-5 text-center"></i>
-                        <span>Agenda de Tarefas</span>
-                    </button>
-                    <button  data-action="switch-tab" data-tab="tab-fridge" id="nav-tab-fridge" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-snowflake w-5 text-center"></i>
-                        <span>Despensa & Receitas</span>
-                    </button>
-                    <button  data-action="switch-tab" data-tab="tab-stats" id="nav-tab-stats" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-chart-column w-5 text-center"></i>
-                        <span>Estatísticas e ofensivas</span>
-                    </button>
-                    <button  data-action="switch-tab" data-tab="tab-settings" id="nav-tab-settings" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-database w-5 text-center"></i>
-                        <span>Backup</span>
-                    </button>
-                </nav>
+    <!-- Active Button -->
+    <button data-action="switch-tab" data-tab="tab-routines" id="nav-tab-routines" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/20">
+        <i class="fa-solid fa-list-check w-5 text-center"></i>
+        <span>Rotinas Diárias</span>
+    </button>
+
+    <!-- Inactive Buttons with explicit hover:bg-brand-500 -->
+    <button data-action="switch-tab" data-tab="tab-weekly" id="nav-tab-weekly" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-brand-500 hover:text-white">
+        <i class="fa-solid fa-calendar-days w-5 text-center"></i>
+        <span>Tarefas por Dia</span>
+    </button>
+    <button data-action="switch-tab" data-tab="tab-planner" id="nav-tab-planner" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-brand-500 hover:text-white">
+        <i class="fa-solid fa-clock w-5 text-center"></i>
+        <span>Agenda de Tarefas</span>
+    </button>
+    <button data-action="switch-tab" data-tab="tab-fridge" id="nav-tab-fridge" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-brand-500 hover:text-white">
+        <i class="fa-solid fa-snowflake w-5 text-center"></i>
+        <span>Despensa & Receitas</span>
+    </button>
+    <button data-action="switch-tab" data-tab="tab-stats" id="nav-tab-stats" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-brand-500 hover:text-white">
+        <i class="fa-solid fa-chart-column w-5 text-center"></i>
+        <span>Estatísticas e ofensivas</span>
+    </button>
+    <button data-action="switch-tab" data-tab="tab-settings" id="nav-tab-settings" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 dark:text-gray-400 hover:bg-brand-500 hover:text-white">
+        <i class="fa-solid fa-database w-5 text-center"></i>
+        <span>Backup</span>
+    </button>
+</nav>
+
             </div>
 
             <!-- Footer Quick Controls & Theme Toggle -->
