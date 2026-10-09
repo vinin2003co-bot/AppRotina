@@ -1,21 +1,25 @@
+function formatLocalDate(date) {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+}
+
 export function getTodayStr() {
     const date = new Date();
-
-    return date.toISOString().split('T')[0];
+    const dateNew = formatLocalDate(date)
+    return dateNew.toISOString().split('T')[0];
 }
 
 export function getWeekDates() {
     const current = new Date();
-
-    const day = current.getDay();
+    const currentNew = formatLocalDate(current)
+    const day = currentNew.getDay();
 
     // Monday = 0
     const mondayOffset = day === 0 ? -6 : 1 - day;
 
-    const monday = new Date(current);
+    const monday = new Date(currentNew);
 
     monday.setDate(
-        current.getDate() + mondayOffset
+        currentNew.getDate() + mondayOffset
     );
 
     return Array.from({ length: 7 }, (_, index) => {
