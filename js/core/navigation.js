@@ -70,12 +70,12 @@ export function switchTab(tabId) {
         case 'tab-stats':
             renderStats();
             break;
-        case 'tab-remedios':
-            renderRemediesUI();
+       case 'tab-remedios':
+            renderFridge();
             break;
     }
 }
-
+Tarefas por DiaTarefas por Dia
 export function toggleTheme() {
     const html =
         document.documentElement;
