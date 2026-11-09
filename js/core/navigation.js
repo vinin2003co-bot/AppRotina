@@ -70,7 +70,7 @@ export function switchTab(tabId) {
         case 'tab-stats':
             renderStats();
             break;
-        case 'tab-remedios';
+        case 'tab-remedios':
             renderRemediesUI();
             break;
     }
