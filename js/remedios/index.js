@@ -1,5 +1,38 @@
 import { remediesState } from './remediesState.js';
 import { RemedyJarCanvas } from './remediesCanvas.js';
+import { remediesUI } from './remediesUI.js';
+
+// Exemplo de uso dentro do renderRemediesUI() no index.js:
+export function renderRemediesUI() {
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayDoses = calculateDosesForDate(todayStr);
+
+  // Renderiza checklist de hoje e trata o checkbox
+  remediesUI.renderTodayChecklist(todayDoses, (index, isChecked, dose) => {
+    if (!remediesState.todayChecked[todayStr]) {
+      remediesState.todayChecked[todayStr] = {};
+    }
+    const wasChecked = remediesState.todayChecked[todayStr][index];
+    remediesState.todayChecked[todayStr][index] = isChecked;
+    remediesState.saveChecked();
+
+    if (isChecked && !wasChecked) {
+      remediesState.addLog({
+        name: dose.name,
+        quantity: dose.quantity,
+        mg: dose.mg,
+        type: 'Rotina',
+        dateStr: new Date().toLocaleDateString('pt-BR'),
+        timeStr: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+      });
+    }
+
+    renderRemediesUI();
+  });
+
+  // Renderiza histórico
+  remediesUI.renderLogs(remediesState.logs);
+}
 
 let jarCanvas = null;
 let selectedPreviewDate = new Date().toISOString().split('T')[0];
