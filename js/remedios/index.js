@@ -16,19 +16,16 @@ export function initRemediesModule() {
 }
 
 function setupEventListeners() {
-  // Abrir Modal de Adicionar Remédio
   const btnAddRemedy = document.getElementById('btn-add-remedy');
   if (btnAddRemedy) {
     btnAddRemedy.onclick = () => openModal('modal-add-remedy');
   }
 
-  // Abrir Modal Tomei Agora
   const btnTakeNow = document.getElementById('btn-take-now');
   if (btnTakeNow) {
     btnTakeNow.onclick = () => openModal('modal-take-now');
   }
 
-  // Fechar Modais (botões de cancelar / 'X')
   document.querySelectorAll('[data-close-modal]').forEach(btn => {
     btn.onclick = (e) => {
       const modalId = e.currentTarget.getAttribute('data-close-modal');
@@ -36,7 +33,6 @@ function setupEventListeners() {
     };
   });
 
-  // Salvar Remédio da Rotina
   const formAddRemedy = document.getElementById('form-add-remedy');
   if (formAddRemedy) {
     formAddRemedy.onsubmit = (e) => {
@@ -45,7 +41,6 @@ function setupEventListeners() {
     };
   }
 
-  // Salvar Remédio Avulso
   const formTakeNow = document.getElementById('form-take-now');
   if (formTakeNow) {
     formTakeNow.onsubmit = (e) => {
@@ -175,11 +170,11 @@ function calculateDosesForDate(targetDateStr) {
   return results;
 }
 
+// Declaração única de renderRemediesUI
 export function renderRemediesUI() {
   const todayStr = new Date().toISOString().split('T')[0];
   const todayDoses = calculateDosesForDate(todayStr);
 
-  // 1. Checklist de Hoje
   remediesUI.renderTodayChecklist(todayDoses, (index, isChecked, dose) => {
     if (!remediesState.todayChecked[todayStr]) {
       remediesState.todayChecked[todayStr] = {};
@@ -202,7 +197,6 @@ export function renderRemediesUI() {
     renderRemediesUI();
   });
 
-  // 2. Progresso do Pote (Canvas)
   const checkedState = remediesState.todayChecked[todayStr] || {};
   const checkedCount = Object.values(checkedState).filter(Boolean).length;
   const progress = todayDoses.length > 0 ? (checkedCount / todayDoses.length) * 100 : 0;
@@ -210,13 +204,11 @@ export function renderRemediesUI() {
     jarCanvas.setProgress(progress);
   }
 
-  // 3. Pré-visualização Próximos Dias
   remediesUI.renderPreviewDaysSelector(selectedPreviewDate, (newDate) => {
     selectedPreviewDate = newDate;
     renderRemediesUI();
   });
   remediesUI.renderPreviewList(calculateDosesForDate(selectedPreviewDate));
 
-  // 4. Histórico / Logs
   remediesUI.renderLogs(remediesState.logs);
 }
