@@ -3,7 +3,8 @@ import { renderWeeklyTasks } from '../weekly/weekly.js';
 import { renderTimeline } from '../planner/planner.js';
 import { renderRoutines } from '../routines/routines.js';
 import { renderFridge } from '../fridge/index.js';
-import { renderRemediesUI } from '../remedios/index.js';
+import { initRemediesModule, renderRemediesUI } from '../remedios/index.js';
+let remediesInitialized = false;
 
 export function switchTab(tabId) {
     document
@@ -71,7 +72,12 @@ export function switchTab(tabId) {
             renderStats();
             break;
        case 'tab-remedios':
-            renderFridge();
+            if (!remediesInitialized) {
+              initRemediesModule();
+              remediesInitialized = true;
+            } else {
+              renderRemediesUI();
+            }
             break;
     }
 }
