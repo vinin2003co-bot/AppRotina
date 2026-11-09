@@ -110,6 +110,38 @@ export const remediesUI = {
       </div>
     `).join('');
   },
+  renderRemediesList(remedies, onDeleteRemedy) {
+    const container = document.getElementById('remedies-list-container');
+    if (!container) return;
+
+    if (!remedies || remedies.length === 0) {
+      container.innerHTML = `
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800/60 text-center">
+          <p class="text-slate-400 dark:text-slate-500 text-xs italic">Nenhum remédio cadastrado na rotina.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = remedies.map(remedy => `
+      <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50">
+        <div>
+          <h4 class="font-semibold text-slate-700 dark:text-slate-200 text-sm">${remedy.name}</h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400">${remedy.quantity} un • ${remedy.mg} mg (A cada ${remedy.intervalValue} ${remedy.intervalUnit})</p>
+        </div>
+        <button type="button" data-delete-remedy="${remedy.id}" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
+          <i class="fa-solid fa-trash text-xs"></i>
+        </button>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-delete-remedy]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-delete-remedy');
+        if (onDeleteRemedy) onDeleteRemedy(id);
+      });
+    });
+  },
 
   renderLogs(logs) {
     const logsContainer = document.getElementById('remedies-logs-container');
