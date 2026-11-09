@@ -3,6 +3,7 @@ import { renderWeeklyTasks } from '../weekly/weekly.js';
 import { renderTimeline } from '../planner/planner.js';
 import { renderRoutines } from '../routines/routines.js';
 import { renderFridge } from '../fridge/index.js';
+import { renderRemediesUI } from '../remedios/index.js';
 
 export function switchTab(tabId) {
     document
@@ -68,6 +69,9 @@ export function switchTab(tabId) {
 
         case 'tab-stats':
             renderStats();
+            break;
+        case 'tab-remedios';
+            renderRemediesUI();
             break;
     }
 }
