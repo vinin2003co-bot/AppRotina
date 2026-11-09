@@ -75,7 +75,6 @@ export function switchTab(tabId) {
             break;
     }
 }
-Tarefas por DiaTarefas por Dia
 export function toggleTheme() {
     const html =
         document.documentElement;
