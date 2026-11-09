@@ -5,7 +5,9 @@ export const remediesUI = {
     const checklistContainer = document.getElementById('today-checklist-container');
     if (!checklistContainer) return;
 
-    const todayStr = new Date().toLocaleTimeString('pt-BR').split('T')[0];
+    // Usa formato local em vez de toISOString
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const checkedState = remediesState.todayChecked[todayStr] || {};
 
     if (todayDoses.length === 0) {
@@ -43,7 +45,6 @@ export const remediesUI = {
       `;
     }).join('');
 
-    // Adiciona listener para alteração nos checkboxes
     checklistContainer.querySelectorAll('.remedy-checkbox').forEach(checkbox => {
       checkbox.addEventListener('change', (e) => {
         const index = e.target.getAttribute('data-dose-index');
@@ -65,7 +66,9 @@ export const remediesUI = {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(today.getDate() + i);
-      const dateString = d.toLocaleTimeString('pt-BR').split('T')[0];
+      
+      // Correção: Gera a string no formato local YYYY-MM-DD sem alterar para UTC
+      const dateString = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       const label = i === 0 ? 'Hoje' : d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
       const isSelected = dateString === selectedDateStr;
 
@@ -83,6 +86,39 @@ export const remediesUI = {
 
       container.appendChild(btn);
     }
+  },
+
+  renderRemediesList(remedies, onDeleteRemedy) {
+    const container = document.getElementById('remedies-list-container');
+    if (!container) return;
+
+    if (!remedies || remedies.length === 0) {
+      container.innerHTML = `
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800/60 text-center">
+          <p class="text-slate-400 dark:text-slate-500 text-xs italic">Nenhum remédio cadastrado na rotina.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = remedies.map(remedy => `
+      <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50">
+        <div>
+          <h4 class="font-semibold text-slate-700 dark:text-slate-200 text-sm">${remedy.name}</h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400">${remedy.quantity} un • ${remedy.mg} mg</p>
+        </div>
+        <button type="button" data-delete-remedy="${remedy.id}" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
+          <i class="fa-solid fa-trash text-xs"></i>
+        </button>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-delete-remedy]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-delete-remedy');
+        if (onDeleteRemedy) onDeleteRemedy(id);
+      });
+    });
   },
 
   renderPreviewList(scheduledDoses) {
@@ -109,38 +145,6 @@ export const remediesUI = {
         </span>
       </div>
     `).join('');
-  },
-  renderRemediesList(remedies, onDeleteRemedy) {
-    const container = document.getElementById('remedies-list-container');
-    if (!container) return;
-
-    if (!remedies || remedies.length === 0) {
-      container.innerHTML = `
-        <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800/60 text-center">
-          <p class="text-slate-400 dark:text-slate-500 text-xs italic">Nenhum remédio cadastrado na rotina.</p>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = remedies.map(remedy => `
-      <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50">
-        <div>
-          <h4 class="font-semibold text-slate-700 dark:text-slate-200 text-sm">${remedy.name}</h4>
-          <p class="text-xs text-slate-500 dark:text-slate-400">${remedy.quantity} un • ${remedy.mg} mg (A cada ${remedy.intervalValue} ${remedy.intervalUnit})</p>
-        </div>
-        <button type="button" data-delete-remedy="${remedy.id}" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
-          <i class="fa-solid fa-trash text-xs"></i>
-        </button>
-      </div>
-    `).join('');
-
-    container.querySelectorAll('[data-delete-remedy]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.currentTarget.getAttribute('data-delete-remedy');
-        if (onDeleteRemedy) onDeleteRemedy(id);
-      });
-    });
   },
 
   renderLogs(logs) {
