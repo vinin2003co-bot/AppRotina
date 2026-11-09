@@ -19,6 +19,10 @@ export const remediesState = {
     this.remedies.push({ id: Date.now().toString(), ...remedy });
     this.saveRemedies();
   },
+  removeRemedy(id) {
+    this.remedies = this.remedies.filter(r => r.id !== id);
+    this.saveRemedies();
+  },
 
   addLog(entry) {
     this.logs.unshift({
