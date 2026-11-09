@@ -271,6 +271,59 @@
                 </div>
             </section>
 
+            <!-- TAB 5: REMÉDIOS -->
+            <section id="tab-remedios" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold tracking-tight">Lembrete de Remédios</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Acompanhe suas dosagens diárias e histórico de medicamentos.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="btn-add-remedy" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-all shadow-md flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> Adicionar Remédio
+                            </button>
+                            <button id="btn-take-now" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium transition-all shadow-md flex items-center gap-2">
+                                <i class="fa-solid fa-capsules"></i> Tomei Agora
+                            </button>
+                        </div>
+                    </div>
+            
+                    <!-- Container Pote Glassmorphism (Tomar Hoje) -->
+                    <div class="relative overflow-hidden rounded-2xl border border-indigo-200/50 dark:border-indigo-900/40 p-6 backdrop-blur-md bg-white/40 dark:bg-slate-900/40 min-h-[220px] shadow-inner">
+                        <canvas id="remedies-jar-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                        
+                        <div class="relative z-10 space-y-4">
+                            <div class="flex items-center justify-between border-b border-indigo-100 dark:border-slate-800 pb-3">
+                                <h3 class="font-bold text-lg text-indigo-950 dark:text-indigo-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-prescription-bottle-medical text-indigo-500"></i>
+                                    Tomar Hoje
+                                </h3>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 rounded-full">
+                                    Checklist do Dia
+                                </span>
+                            </div>
+            
+                            <!-- Lista Checklist de Hoje -->
+                            <div id="today-checklist-container" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Pré-visualização dos Próximos 7 Dias -->
+                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-base text-gray-800 dark:text-gray-200">Próximos Dias</h3>
+                    <div id="preview-days-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none"></div>
+                    <div id="preview-list-container" class="space-y-2"></div>
+                </div>
+            
+                <!-- Histórico e Logs -->
+                <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-base text-gray-800 dark:text-gray-200">Histórico de Uso</h3>
+                    <div id="remedies-logs-container" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+            </section>
+
             <!-- TAB 5: STATISTICS & STREAKS -->
             <section id="tab-stats" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -570,6 +623,101 @@
                     <span class="font-bold text-lg" id="nutri-fat">0</span><span class="text-xs font-medium ml-1">g</span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADICIONAR REMÉDIO (ROTINA) -->
+    <div id="modal-add-remedy" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button type="button" data-close-modal="modal-add-remedy" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Adicionar Remédio</h3>
+            <form id="form-add-remedy" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nome do Remédio *</label>
+                    <input type="text" id="remedy-name" required placeholder="Ex: Paracetamol" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+    
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Quantidade *</label>
+                        <select id="remedy-qty" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                            <option value="0.5">0.5</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Miligramas (mg) *</label>
+                        <input type="number" id="remedy-mg" required placeholder="Ex: 500" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                    </div>
+                </div>
+    
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Início *</label>
+                        <input type="datetime-local" id="remedy-start" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Fim (Opcional)</label>
+                        <input type="date" id="remedy-end" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                    </div>
+                </div>
+    
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Frequência *</label>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-500">A cada</span>
+                        <input type="number" id="remedy-interval-val" min="1" value="8" required class="w-20 px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm text-center">
+                        <select id="remedy-interval-unit" class="flex-1 px-3 py-2 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                            <option value="hours" selected>hora(s)</option>
+                            <option value="days">dia(s)</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-darkborder">
+                    <button type="button" data-close-modal="modal-add-remedy" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MODAL: TOMEI AGORA (AVULSO) -->
+    <div id="modal-take-now" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button type="button" data-close-modal="modal-take-now" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Tomei Agora (Avulso)</h3>
+            <form id="form-take-now" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nome do Remédio *</label>
+                    <input type="text" id="taken-name" required placeholder="Ex: Dipirona" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+    
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Quantidade *</label>
+                        <select id="taken-qty" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                            <option value="0.5">0.5</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Miligramas (mg) *</label>
+                        <input type="number" id="taken-mg" required placeholder="Ex: 500" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-darkborder bg-gray-50 dark:bg-gray-800 text-sm">
+                    </div>
+                </div>
+    
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-darkborder">
+                    <button type="button" data-close-modal="modal-take-now" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">Salvar no Histórico</button>
+                </div>
+            </form>
         </div>
     </div>
 
