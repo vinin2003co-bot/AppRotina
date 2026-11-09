@@ -27,7 +27,7 @@ export const remediesState = {
   addLog(entry) {
     this.logs.unshift({
       id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleTimeString('pt-BR'),
       ...entry
     });
     this.saveLogs();
