@@ -1,11 +1,6 @@
 import { remediesState } from './remediesState.js';
 
 export const remediesUI = {
-  /**
-   * Renderiza a checklist de remédios para a data de hoje.
-   * @param {Array} todayDoses - Lista de doses calculadas para hoje
-   * @param {Function} onCheckboxToggle - Callback executado ao alternar um checkbox
-   */
   renderTodayChecklist(todayDoses, onCheckboxToggle) {
     const checklistContainer = document.getElementById('today-checklist-container');
     if (!checklistContainer) return;
@@ -31,7 +26,7 @@ export const remediesUI = {
             <input type="checkbox" 
                    data-dose-index="${index}" 
                    ${isChecked ? 'checked' : ''} 
-                   class="w-5 h-5 text-indigo-600 rounded-lg border-slate-300 focus:ring-indigo-500 dark:bg-slate-700 dark:border-slate-600 cursor-pointer">
+                   class="remedy-checkbox w-5 h-5 text-indigo-600 rounded-lg border-slate-300 focus:ring-indigo-500 dark:bg-slate-700 dark:border-slate-600 cursor-pointer">
             <div>
               <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm block ${isChecked ? 'line-through opacity-50' : ''}">
                 ${dose.name}
@@ -48,8 +43,8 @@ export const remediesUI = {
       `;
     }).join('');
 
-    // Associa os eventos de alteração dos checkboxes
-    checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    // Adiciona listener para alteração nos checkboxes
+    checklistContainer.querySelectorAll('.remedy-checkbox').forEach(checkbox => {
       checkbox.addEventListener('change', (e) => {
         const index = e.target.getAttribute('data-dose-index');
         const isChecked = e.target.checked;
@@ -60,11 +55,6 @@ export const remediesUI = {
     });
   },
 
-  /**
-   * Renderiza os botões de seleção dos próximos 7 dias.
-   * @param {string} selectedDateStr - Data atualmente selecionada (YYYY-MM-DD)
-   * @param {Function} onSelectDate - Callback ao clicar em um dia
-   */
   renderPreviewDaysSelector(selectedDateStr, onSelectDate) {
     const container = document.getElementById('preview-days-container');
     if (!container) return;
@@ -77,7 +67,6 @@ export const remediesUI = {
       d.setDate(today.getDate() + i);
       const dateString = d.toISOString().split('T')[0];
       const label = i === 0 ? 'Hoje' : d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
-
       const isSelected = dateString === selectedDateStr;
 
       const btn = document.createElement('button');
@@ -96,10 +85,6 @@ export const remediesUI = {
     }
   },
 
-  /**
-   * Renderiza a lista de doses programadas para o dia selecionado na pré-visualização.
-   * @param {Array} scheduledDoses - Lista de remédios calculados para a data
-   */
   renderPreviewList(scheduledDoses) {
     const container = document.getElementById('preview-list-container');
     if (!container) return;
@@ -126,10 +111,6 @@ export const remediesUI = {
     `).join('');
   },
 
-  /**
-   * Renderiza o histórico e logs de remédios tomados no final da página.
-   * @param {Array} logs - Lista de logs salvos no estado
-   */
   renderLogs(logs) {
     const logsContainer = document.getElementById('remedies-logs-container');
     if (!logsContainer) return;
@@ -137,39 +118,35 @@ export const remediesUI = {
     if (!logs || logs.length === 0) {
       logsContainer.innerHTML = `
         <div class="py-6 text-center">
-          <p class="text-slate-400 dark:text-slate-500 text-xs italic">Nenhum registro de uso no histórico ainda.</p>
+          <p class="text-slate-400 dark:text-slate-500 text-xs italic">Nenhum registro no histórico ainda.</p>
         </div>
       `;
       return;
     }
 
-    logsContainer.innerHTML = logs.map(log => {
-      const isRoutine = log.type === 'Rotina';
-
-      return `
-        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 transition-all">
-          <div class="flex items-center gap-3">
-            <div class="w-2.5 h-2.5 rounded-full ${isRoutine ? 'bg-indigo-500' : 'bg-emerald-500'}"></div>
-            <div>
-              <h4 class="font-semibold text-slate-700 dark:text-slate-200 text-sm">${log.name}</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400">
-                ${log.quantity} un • ${log.mg} mg 
-                <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                  isRoutine 
-                    ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400' 
-                    : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400'
-                }">
-                  ${log.type}
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 block">${log.timeStr}</span>
-            <span class="text-[10px] text-slate-400">${log.dateStr}</span>
+    logsContainer.innerHTML = logs.map(log => `
+      <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 transition-all">
+        <div class="flex items-center gap-3">
+          <div class="w-2.5 h-2.5 rounded-full ${log.type === 'Rotina' ? 'bg-indigo-500' : 'bg-emerald-500'}"></div>
+          <div>
+            <h4 class="font-semibold text-slate-700 dark:text-slate-200 text-sm">${log.name}</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              ${log.quantity} un • ${log.mg} mg 
+              <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                log.type === 'Rotina' 
+                  ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400' 
+                  : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400'
+              }">
+                ${log.type}
+              </span>
+            </p>
           </div>
         </div>
-      `;
-    }).join('');
+        <div class="text-right">
+          <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 block">${log.timeStr}</span>
+          <span class="text-[10px] text-slate-400">${log.dateStr}</span>
+        </div>
+      </div>
+    `).join('');
   }
 };
