@@ -3,12 +3,27 @@ import { remediesUI } from './remediesUI.js';
 import { RemedyJarCanvas } from './remediesCanvas.js';
 
 let jarCanvas = null;
-let selectedPreviewDate = new Date().toLocaleTimeString('pt-BR').split('T')[0];
+
+// Obtém a data local atual no formato YYYY-MM-DD
+function getLocalTodayStr() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+let selectedPreviewDate = getLocalTodayStr();
 
 export function initRemediesModule() {
   const canvasElement = document.getElementById('remedies-jar-canvas');
   if (canvasElement) {
     jarCanvas = new RemedyJarCanvas('remedies-jar-canvas');
+  }
+
+  // Preenche o input de data de início com a data e hora local atual por padrão
+  const startInput = document.getElementById('remedy-start');
+  if (startInput && !startInput.value) {
+    const now = new Date();
+    const localIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    startInput.value = localIso;
   }
 
   setupEventListeners();
@@ -84,7 +99,7 @@ function handleSaveRemedy() {
     name,
     quantity,
     mg,
-    startDate,
+    startDate, // Salva exatamente o valor do input datetime-local
     endDate: endDate || null,
     intervalValue,
     intervalUnit
@@ -119,26 +134,30 @@ function handleSaveTakeNow() {
   renderRemediesUI();
 }
 
+// Cálculo preciso baseado na data local
 function calculateDosesForDate(targetDateStr) {
   const targetDate = new Date(targetDateStr + 'T00:00:00');
   const results = [];
 
   remediesState.remedies.forEach(remedy => {
+    // Garante leitura correta da data de início tirando o fuso se necessário
+    const startPart = remedy.startDate.split('T')[0];
     const startDate = new Date(remedy.startDate);
     const endDate = remedy.endDate ? new Date(remedy.endDate + 'T23:59:59') : null;
 
-    if (targetDate < new Date(remedy.startDate.split('T')[0] + 'T00:00:00')) return;
+    const startDateOnly = new Date(startPart + 'T00:00:00');
+    if (targetDate < startDateOnly) return;
     if (endDate && targetDate > endDate) return;
 
     const startMs = startDate.getTime();
     const targetMs = targetDate.getTime();
-    const diffMs = targetMs - startMs;
+    const diffMs = targetMs - startDateOnly.getTime();
 
     if (diffMs < 0) return;
 
     if (remedy.intervalUnit === 'days') {
       const intervalDays = remedy.intervalValue;
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
       if (diffDays % intervalDays === 0) {
         results.push({
           name: remedy.name,
@@ -153,8 +172,10 @@ function calculateDosesForDate(targetDateStr) {
       const endOfDayMs = targetMs + (24 * 60 * 60 * 1000) - 1;
 
       while (currentOccurrence <= endOfDayMs) {
-        if (currentOccurrence >= targetMs && currentOccurrence <= endOfDayMs) {
-          const occDate = new Date(currentOccurrence);
+        const occDate = new Date(currentOccurrence);
+        const occDateStr = `${occDate.getFullYear()}-${String(occDate.getMonth() + 1).padStart(2, '0')}-${String(occDate.getDate()).padStart(2, '0')}`;
+        
+        if (occDateStr === targetDateStr) {
           results.push({
             name: remedy.name,
             quantity: remedy.quantity,
@@ -170,18 +191,11 @@ function calculateDosesForDate(targetDateStr) {
   return results;
 }
 
-// Declaração única de renderRemediesUI
 export function renderRemediesUI() {
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = getLocalTodayStr();
   const todayDoses = calculateDosesForDate(todayStr);
 
-  remediesUI.renderRemediesList(remediesState.remedies, (id) => {
-    if (confirm('Deseja realmente excluir este remédio da rotina?')) {
-      remediesState.removeRemedy(id);
-      renderRemediesUI();
-    }
-  });
-
+  // 1. Checklist de Hoje
   remediesUI.renderTodayChecklist(todayDoses, (index, isChecked, dose) => {
     if (!remediesState.todayChecked[todayStr]) {
       remediesState.todayChecked[todayStr] = {};
@@ -204,6 +218,7 @@ export function renderRemediesUI() {
     renderRemediesUI();
   });
 
+  // 2. Progresso do Pote (Canvas)
   const checkedState = remediesState.todayChecked[todayStr] || {};
   const checkedCount = Object.values(checkedState).filter(Boolean).length;
   const progress = todayDoses.length > 0 ? (checkedCount / todayDoses.length) * 100 : 0;
@@ -211,11 +226,23 @@ export function renderRemediesUI() {
     jarCanvas.setProgress(progress);
   }
 
+  // 3. Renderiza a Lista de Remédios Cadastrados (com opção de Excluir)
+  if (typeof remediesUI.renderRemediesList === 'function') {
+    remediesUI.renderRemediesList(remediesState.remedies, (id) => {
+      if (confirm('Deseja realmente remover este remédio da sua rotina?')) {
+        remediesState.removeRemedy(id);
+        renderRemediesUI();
+      }
+    });
+  }
+
+  // 4. Pré-visualização Próximos Dias
   remediesUI.renderPreviewDaysSelector(selectedPreviewDate, (newDate) => {
     selectedPreviewDate = newDate;
     renderRemediesUI();
   });
   remediesUI.renderPreviewList(calculateDosesForDate(selectedPreviewDate));
 
+  // 5. Histórico / Logs
   remediesUI.renderLogs(remediesState.logs);
 }
