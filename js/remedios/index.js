@@ -99,7 +99,7 @@ function handleSaveRemedy() {
     name,
     quantity,
     mg,
-    startDate, // Salva exatamente o valor do input datetime-local
+    startDate,
     endDate: endDate || null,
     intervalValue,
     intervalUnit
@@ -134,41 +134,38 @@ function handleSaveTakeNow() {
   renderRemediesUI();
 }
 
-// Cálculo preciso baseado na data local
+// Função robusta de cálculo de doses para qualquer data alvo (inclusive dias futuros)
 function calculateDosesForDate(targetDateStr) {
   const targetDate = new Date(targetDateStr + 'T00:00:00');
+  const targetMs = targetDate.getTime();
   const results = [];
 
   remediesState.remedies.forEach(remedy => {
-    // Garante leitura correta da data de início tirando o fuso se necessário
     const startPart = remedy.startDate.split('T')[0];
     const startDate = new Date(remedy.startDate);
+    const startDateOnly = new Date(startPart + 'T00:00:00');
+    const startMs = startDateOnly.getTime();
+
     const endDate = remedy.endDate ? new Date(remedy.endDate + 'T23:59:59') : null;
 
-    const startDateOnly = new Date(startPart + 'T00:00:00');
-    if (targetDate < startDateOnly) return;
+    if (targetMs < startMs) return;
     if (endDate && targetDate > endDate) return;
-
-    const startMs = startDate.getTime();
-    const targetMs = targetDate.getTime();
-    const diffMs = targetMs - startDateOnly.getTime();
-
-    if (diffMs < 0) return;
 
     if (remedy.intervalUnit === 'days') {
       const intervalDays = remedy.intervalValue;
-      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+      const diffDays = Math.round((targetMs - startMs) / (1000 * 60 * 60 * 24));
+      
       if (diffDays % intervalDays === 0) {
         results.push({
           name: remedy.name,
           quantity: remedy.quantity,
           mg: remedy.mg,
-          time: startDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+          time: new Date(remedy.startDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
         });
       }
     } else if (remedy.intervalUnit === 'hours') {
       const intervalMs = remedy.intervalValue * 60 * 60 * 1000;
-      let currentOccurrence = startMs;
+      let currentOccurrence = new Date(remedy.startDate).getTime();
       const endOfDayMs = targetMs + (24 * 60 * 60 * 1000) - 1;
 
       while (currentOccurrence <= endOfDayMs) {
@@ -236,7 +233,7 @@ export function renderRemediesUI() {
     });
   }
 
-  // 4. Pré-visualização Próximos Dias
+  // 4. Pré-visualização Próximos Dias (garantindo que exiba o dia selecionado corretamente)
   remediesUI.renderPreviewDaysSelector(selectedPreviewDate, (newDate) => {
     selectedPreviewDate = newDate;
     renderRemediesUI();
