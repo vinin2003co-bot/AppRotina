@@ -3,6 +3,8 @@ import {
     loadFridgeStorage
 } from './core/storage.js';
 
+import { initRemediesModule } from './remedios/index.js';
+
 import {
     initializeEvents
 } from './core/events.js';
@@ -71,6 +73,8 @@ function initializeApp() {
 
     populateTimeSelects();
     initializeExpiryDate();
+
+    initRemediesModule();
 }
 
 document.addEventListener(
