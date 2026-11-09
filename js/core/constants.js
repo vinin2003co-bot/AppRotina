@@ -1,3 +1,9 @@
+export const STORAGE_KEYS = {
+  REMEDIES: 'approtina_remedies_list',
+  REMEDIES_LOGS: 'approtina_remedies_logs',
+  REMEDIES_CHECKED: 'approtina_remedies_checked_today'
+};
+
 export const DEFAULT_HABITS = [
     {
         id: 'h1',
