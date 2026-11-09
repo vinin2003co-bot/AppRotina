@@ -175,6 +175,13 @@ export function renderRemediesUI() {
   const todayStr = new Date().toISOString().split('T')[0];
   const todayDoses = calculateDosesForDate(todayStr);
 
+  remediesUI.renderRemediesList(remediesState.remedies, (id) => {
+    if (confirm('Deseja realmente excluir este remédio da rotina?')) {
+      remediesState.removeRemedy(id);
+      renderRemediesUI();
+    }
+  });
+
   remediesUI.renderTodayChecklist(todayDoses, (index, isChecked, dose) => {
     if (!remediesState.todayChecked[todayStr]) {
       remediesState.todayChecked[todayStr] = {};
