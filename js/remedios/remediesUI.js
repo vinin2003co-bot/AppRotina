@@ -5,7 +5,7 @@ export const remediesUI = {
     const checklistContainer = document.getElementById('today-checklist-container');
     if (!checklistContainer) return;
 
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = new Date().toLocaleTimeString('pt-BR').split('T')[0];
     const checkedState = remediesState.todayChecked[todayStr] || {};
 
     if (todayDoses.length === 0) {
@@ -65,7 +65,7 @@ export const remediesUI = {
     for (let i = 0; i < 7; i++) {
       const d = new Date();
       d.setDate(today.getDate() + i);
-      const dateString = d.toISOString().split('T')[0];
+      const dateString = d.toLocaleTimeString('pt-BR').split('T')[0];
       const label = i === 0 ? 'Hoje' : d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
       const isSelected = dateString === selectedDateStr;
 
