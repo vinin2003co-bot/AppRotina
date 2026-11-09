@@ -3,7 +3,7 @@ import { remediesUI } from './remediesUI.js';
 import { RemedyJarCanvas } from './remediesCanvas.js';
 
 let jarCanvas = null;
-let selectedPreviewDate = new Date().toISOString().split('T')[0];
+let selectedPreviewDate = new Date().toLocaleTimeString('pt-BR').split('T')[0];
 
 export function initRemediesModule() {
   const canvasElement = document.getElementById('remedies-jar-canvas');
