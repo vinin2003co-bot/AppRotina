@@ -134,7 +134,7 @@ function handleSaveTakeNow() {
   renderRemediesUI();
 }
 
-// Função robusta de cálculo de doses para qualquer data alvo (inclusive dias futuros)
+// Função de cálculo robusta para qualquer data (inclusive dias futuros)
 function calculateDosesForDate(targetDateStr) {
   const targetDate = new Date(targetDateStr + 'T00:00:00');
   const targetMs = targetDate.getTime();
@@ -160,12 +160,12 @@ function calculateDosesForDate(targetDateStr) {
           name: remedy.name,
           quantity: remedy.quantity,
           mg: remedy.mg,
-          time: new Date(remedy.startDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+          time: startDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
         });
       }
     } else if (remedy.intervalUnit === 'hours') {
       const intervalMs = remedy.intervalValue * 60 * 60 * 1000;
-      let currentOccurrence = new Date(remedy.startDate).getTime();
+      let currentOccurrence = startDate.getTime();
       const endOfDayMs = targetMs + (24 * 60 * 60 * 1000) - 1;
 
       while (currentOccurrence <= endOfDayMs) {
@@ -192,7 +192,17 @@ export function renderRemediesUI() {
   const todayStr = getLocalTodayStr();
   const todayDoses = calculateDosesForDate(todayStr);
 
-  // 1. Checklist de Hoje
+  // 1. Renderiza a Lista de Remédios Cadastrados (com opção de Excluir)
+  if (typeof remediesUI.renderRemediesList === 'function') {
+    remediesUI.renderRemediesList(remediesState.remedies, (id) => {
+      if (confirm('Deseja realmente remover este remédio da sua rotina?')) {
+        remediesState.removeRemedy(id);
+        renderRemediesUI();
+      }
+    });
+  }
+
+  // 2. Checklist de Hoje
   remediesUI.renderTodayChecklist(todayDoses, (index, isChecked, dose) => {
     if (!remediesState.todayChecked[todayStr]) {
       remediesState.todayChecked[todayStr] = {};
@@ -215,7 +225,7 @@ export function renderRemediesUI() {
     renderRemediesUI();
   });
 
-  // 2. Progresso do Pote (Canvas)
+  // 3. Progresso do Pote (Canvas)
   const checkedState = remediesState.todayChecked[todayStr] || {};
   const checkedCount = Object.values(checkedState).filter(Boolean).length;
   const progress = todayDoses.length > 0 ? (checkedCount / todayDoses.length) * 100 : 0;
@@ -223,17 +233,7 @@ export function renderRemediesUI() {
     jarCanvas.setProgress(progress);
   }
 
-  // 3. Renderiza a Lista de Remédios Cadastrados (com opção de Excluir)
-  if (typeof remediesUI.renderRemediesList === 'function') {
-    remediesUI.renderRemediesList(remediesState.remedies, (id) => {
-      if (confirm('Deseja realmente remover este remédio da sua rotina?')) {
-        remediesState.removeRemedy(id);
-        renderRemediesUI();
-      }
-    });
-  }
-
-  // 4. Pré-visualização Próximos Dias (garantindo que exiba o dia selecionado corretamente)
+  // 4. Pré-visualização Próximos Dias (atualizando corretamente o estado ao clicar)
   remediesUI.renderPreviewDaysSelector(selectedPreviewDate, (newDate) => {
     selectedPreviewDate = newDate;
     renderRemediesUI();
